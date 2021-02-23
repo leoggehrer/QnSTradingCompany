@@ -1,0 +1,127 @@
+@*@QnSCodeCopy*@
+@using Microsoft.AspNetCore.Mvc.Razor
+@using QnSTradingCompany.AspMvc.Modules.Session
+@model QnSTradingCompany.AspMvc.Models.Modules.Language.AppTranslation
+@*Begin:Header*@
+@{
+#if DEBUG
+    string currentView = ((RazorView)ViewContext.View).Path;
+    string beginLabel = $"<!--View Begin: '{currentView}'-->";
+    @Html.Raw(beginLabel)
+#endif
+}
+
+@{
+    SessionWrapper sessionWrapper = new SessionWrapper(Context.Session);
+    Func<string, string> translate = sessionWrapper.Translate;
+    Func<string, string, string> translate2 = sessionWrapper.Translate;
+}
+@*End:Header*@
+@{
+    string all = "All";
+    string page = string.Empty;
+    string activeHref = string.Empty;
+    string title = translate("AppTranslation");
+
+    ViewData["Title"] = title;
+    if (sessionWrapper.HasValue(nameof(page)))
+    {
+        page = sessionWrapper.GetStringValue(nameof(page), all);
+    }
+}
+
+<h1>@title</h1>
+<p></p>
+<ul class="nav nav-pills nav-fill">
+    @foreach (var item in Model.NavLinks)
+    {
+        var href = $"/{item.Controller}/{item.Action}";
+
+        <li class="nav-item">
+            @if (item.Active)
+            {
+                activeHref = href;
+
+                <a class="nav-link bg-secondary active" href="@($"{href}?page={page}")">@translate(item.Text)</a>
+            }
+            else
+            {
+                <a class="nav-link bg-light" href="@($"{href}?page={page}")">@translate(item.Text)</a>
+            }
+        </li>
+    }
+</ul>
+<p></p>
+
+@if (Model.HasError)
+{
+    <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
+}
+
+@{
+    char chrStart = 'A', chrEnd = 'Z';
+    <div class="d-flex justify-content-center">
+        @for (char chrRun = chrStart; chrRun <= chrEnd; chrRun++)
+        {
+            string strRun = Char.ToString(chrRun);
+
+            if (chrRun.ToString().Equals(page))
+            {
+                <div class="p-sm-0"><a class="page-link" style="background-color: lightgray;" href="@($"{activeHref}?page={strRun}")">@strRun</a></div>
+            }
+            else
+            {
+                <div class="p-sm-0"><a class="page-link" href="@($"{activeHref}?page={strRun}")">@strRun</a></div>
+            }
+        }
+        @if (page.Equals(all))
+        {
+            <div class="p-0" style="margin-left: 10px;"><a class="page-link" style="background-color: lightgray;" href="@($"{activeHref}?page={all}")">@translate2($"TranslatorFilter.All", all)</a></div>
+        }
+        else
+        {
+            <div class="p-0" style="margin-left: 10px;"><a class="page-link" href="@($"{activeHref}?page={all}")">@translate2($"TranslatorFilter.All", all)</a></div>
+        }
+    </div>
+}
+<p></p>
+<form asp-action="@Model.Action" method="post">
+    @await Html.PartialAsync("_Submit", new SubmitCmd { RightAlign = true })
+    @{
+        var index = 0;
+        var keyLabel = translate("Key");
+        var valueLabel = translate("Value");
+
+        foreach (var item in Model.Entries)
+        {
+            if (index > 0)
+            {
+                <p></p>
+            }
+            <input type="hidden" name="@($"id[{index}]")" value="@item.Value.Id" />
+            <div class="row border border-secondary">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label">@keyLabel</label>
+                        <textarea name="@($"key[{index}]")" class="form-control">@item.Key</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@valueLabel</label>
+                        <textarea name="@($"value[{index++}]")" class="form-control">@item.Value.Value</textarea>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    @await Html.PartialAsync("_Submit", new SubmitCmd { RightAlign = true })
+</form>
+
+@*Begin:Footer*@
+@{
+#if DEBUG
+    string endLabel = $"<!--View Ende: '{currentView}'-->";
+
+    @Html.Raw(endLabel)
+#endif
+}
+@*End:Footer*@

@@ -1,0 +1,27 @@
+-- Create a Function Stored Procedure like this
+
+ALTER FUNCTION [dbo].[fnTrackBy] 
+(	
+	-- Add the parameters for the function here
+   @genreId int
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	-- Add the SELECT statement with parameter references here
+      SELECT [Id]
+      ,[GenreId]
+      ,[Title]
+      FROM   MusicStoreApp.Track
+      WHERE GenreId = @genreId
+)
+
+-- Create a Query with the result from the function Stored Procedure
+
+CREATE VIEW [dbo].[qryRockTrack]
+AS
+SELECT        Id, GenreId, Title
+FROM            dbo.fnTrackBy(1) AS fnTrackBy_1
+GO
+

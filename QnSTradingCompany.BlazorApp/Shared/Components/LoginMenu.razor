@@ -1,0 +1,17 @@
+@*@QnSCodeCopy*@
+@inherits CommonMenu
+
+@if (CanRender)
+{
+	<RadzenProfileMenu Style="background-color: transparent;" Click="@((args) => OnClickProfileMenuAsync(args))">
+		<Template>
+			<RadzenGravatar Email="@AuthorizationSession?.Email"></RadzenGravatar>
+		</Template>
+		<ChildContent>
+			@foreach (var item in MenuItems)
+			{
+				<RadzenProfileMenuItem Text="@item.Text" Value="@item.Value" Path="@item.Path" Icon="@item.Icon"></RadzenProfileMenuItem>
+			}
+		</ChildContent>
+	</RadzenProfileMenu>
+}

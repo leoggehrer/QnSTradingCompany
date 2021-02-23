@@ -1,0 +1,51 @@
+@*@QnSCodeCopy*@
+@inherits DataGridComponent
+@using Radzen;
+@using TRole = QnSTradingCompany.BlazorApp.Models.Persistence.Account.Role;
+
+<RadzenCard Style="margin-bottom:20px">
+    <b>@TitleValue</b>
+</RadzenCard>
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="@TranslateFor("Roles")">
+            <RadzenGrid AllowPaging="false"
+                        AllowSorting="true"
+                        AllowFiltering="false"
+                        TItem="TRole"
+                        Data="@MasterDataGridHandler.RoleModels"
+                        @ref="MasterDataGridHandler.RadzenGridRole">
+                <Columns>
+                    <RadzenGridColumn TItem="TRole" Property="@nameof(TRole.Assigned)" Title="@Translate(nameof(TRole.Assigned))" Width="100px">
+                        <Template Context="item">
+                            <Radzen.Blazor.RadzenCheckBox TValue="bool" @bind-Value="@item.Assigned" Change="@(async args => await MasterDataGridHandler.ChangeRoleAssignmentAsync(args, item.Id))" />
+                        </Template>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn TItem="TRole" Property="@nameof(TRole.Designation)" Title="@Translate(nameof(TRole.Designation))">
+                        <EditTemplate Context="item">
+                            <RadzenTextBox @bind-Value="@item.Designation" Name="@TranslateFor(nameof(TRole.Designation))" Style="width: 100%; display: block" />
+                            <RadzenRequiredValidator Text="@TranslateFor(nameof(TRole.Designation) + " is required")" Component="@TranslateFor(nameof(TRole.Designation))" Popup="true" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn TItem="TRole" Property="@nameof(TRole.Description)" Title="@Translate(nameof(TRole.Description))">
+                        <EditTemplate Context="item">
+                            <RadzenTextBox @bind-Value="@item.Description" Name="@TranslateFor(nameof(TRole.Description))" Style="width: 100%; display: block" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="@TranslateFor("Details")">
+            <RadzenPanel>
+                <HeaderTemplate>
+                </HeaderTemplate>
+                <ChildContent>
+                    <DisplayModelComponent ModelPage=@ModelPage ParentComponent=@this Model="@ParentModel" />
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+

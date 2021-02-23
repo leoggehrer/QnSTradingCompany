@@ -1,0 +1,30 @@
+@*@QnSGeneratedCode*@
+@inherits FieldSetComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Account.Role;
+
+@if (CanFieldCreate(nameof(EditModel.Designation)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Designation))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.Designation" MaxLength="64" Name="@TranslateFor(nameof(EditModel.Designation))" Style="width: 100%;" />
+            <RadzenRequiredValidator Text="@TranslateFor(nameof(EditModel.Designation) + " is required")" Component="@TranslateFor(nameof(EditModel.Designation))" Popup="false" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Description)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Description))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.Description" MaxLength="256" Name="@TranslateFor(nameof(EditModel.Description))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+

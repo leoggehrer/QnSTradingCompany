@@ -1,0 +1,34 @@
+@*@QnSCodeCopy*@
+@inherits CommonLayout
+
+<RadzenHeader>
+    <ChildContent>
+        <div class="row justify-content-start align-items-center">
+            <div class="col-md-6 d-flex align-items-center">
+                <RadzenSidebarToggle Click="@SidebarToggleClick" />
+                <RadzenLabel Text="QnSTradingCompany" />
+            </div>
+        </div>
+    </ChildContent>
+</RadzenHeader>
+<RadzenBody @ref="LayoutBody">
+    <ChildContent>
+        <RadzenContentContainer Name="main">
+            @Body
+        </RadzenContentContainer>
+    </ChildContent>
+</RadzenBody>
+<RadzenSidebar @ref="LayoutSidebar">
+    <ChildContent>
+        <RadzenPanelMenu style="height: 100%">
+            <ChildContent>
+                <RadzenPanelMenuItem Text="Home" Path="/" Icon="home" />
+            </ChildContent>
+        </RadzenPanelMenu>
+    </ChildContent>
+</RadzenSidebar>
+<RadzenFooter>
+    <ChildContent>
+        <RadzenLabel Text="QnSTradingCompany, Copyright Ⓒ 2020" />
+    </ChildContent>
+</RadzenFooter>

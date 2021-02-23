@@ -1,0 +1,53 @@
+@*@QnSGeneratedCode*@
+@inherits FieldSetComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.App.Order;
+
+@if (CanFieldCreate(nameof(EditModel.ProductId)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.ProductId))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.ProductId" Name="@TranslateFor(nameof(EditModel.ProductId))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.CustomerId)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.CustomerId))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.CustomerId" Name="@TranslateFor(nameof(EditModel.CustomerId))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Count)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Count))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.Count" Name="@TranslateFor(nameof(EditModel.Count))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Discount)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Discount))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Decimal" @bind-Value="@EditModel.Discount" Name="@TranslateFor(nameof(EditModel.Discount))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+

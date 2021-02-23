@@ -1,0 +1,22 @@
+@*@QnSCodeCopy*@
+@using QnSTradingCompany.BlazorApp.Pages
+
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+                <NotAuthorized />
+            </NotAuthorized>
+            <Authorizing>
+                Du bist eingeloggt!
+            </Authorizing>
+        </AuthorizeRouteView>
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <Error404 />
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

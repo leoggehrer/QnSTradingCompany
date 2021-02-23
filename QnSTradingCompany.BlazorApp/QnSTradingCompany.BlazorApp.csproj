@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>e01c10c4-5d90-4587-859f-4de83b73b1b7</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Radzen.Blazor" Version="3.0.6" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QnSTradingCompany.Adapters\QnSTradingCompany.Adapters.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Business\Account\" />
+    <Folder Include="Pages\Business\MusicStoreApp\" />
+    <Folder Include="Pages\Shadow\" />
+    <Folder Include="Shared\Components\Shadow\" />
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Shared\Components\DataGridCommonComponent - Copy.razor.cs">
+      <DependentUpon>DataGridCommonComponent.razor.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\Components\PropertyGridComponent - Copy - Copy.razor.cs">
+      <DependentUpon>PropertyGridComponent - Copy.razor.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\Components\PropertyGridComponent - Copy.razor.cs">
+      <DependentUpon>PropertyGridComponent.razor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+@*@QnSGeneratedCode*@
+@inherits DataGridDetailComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Data.BinaryData;
+
+<RadzenCard Style="margin-bottom:20px">
+    <b>@TranslateFor(TitleValue)</b>
+</RadzenCard>
+<RadzenPanel>
+    <HeaderTemplate>
+    </HeaderTemplate>
+    <ChildContent>
+        <DisplayModelComponent ModelPage=@ModelPage ParentComponent=@this Model="@ParentModel" />
+    </ChildContent>
+</RadzenPanel>
+

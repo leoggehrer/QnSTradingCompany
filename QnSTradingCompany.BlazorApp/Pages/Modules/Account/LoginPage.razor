@@ -1,0 +1,42 @@
+@*@QnSCodeCopy*@
+@page "/login"
+@layout LoginLayout
+@inherits Pages.CommonPage
+
+<div class="col-xl-10 col-lg-12 col-md-9 auto-vertical-margin">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <RadzenImage src="img/Logo.jpeg" class="img-fluid" alt="ISO Logo" />
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-5 h-100 row">
+                        <div class="auto-vertical-margin col-xl-12 col-lg-12 col-md-12">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">@Translate("Login.WelcomeBack")</h1>
+                            </div>
+                            <EditForm EditContext="@EditContext" class="user">
+                                <DataAnnotationsValidator />
+                                <div class="form-group">
+                                    <InputText @bind-Value="@FormModel.Email" type="email" class="form-control form-control-user" id="loginInputEmail" aria-describedby="emailHelp" autofocus placeholder=@Translate("Login.EnterEmailAddress") />
+                                    <ValidationMessage For="@(() => FormModel.Email)" />
+                                </div>
+                                <div class="form-group">
+                                    <InputText @bind-Value="@FormModel.Password" type="password" class="form-control form-control-user" id="loginInputPassword" placeholder=@Translate("Login.EnterPassword") />
+                                    <ValidationMessage For="@(() => FormModel.Password)" />
+                                </div>
+                                <button @onclick="@OnSubmitAsync" class="btn btn-primary btn-user btn-block">
+                                    @Translate("Login.Login")
+                                </button>
+
+                                <label class="text-danger">@Error</label>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

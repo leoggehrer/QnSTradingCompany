@@ -1,0 +1,30 @@
+@*@QnSGeneratedCode*@
+@page "/Identity"
+@inherits Pages.DataGridPage
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Account.Identity;
+
+@if (MenuItems.Count > 0)
+{
+    <RadzenMenu Click="@(args => OnMenuItemClick(args))">
+        <RadzenMenuItem Text="@Translate(PageName)" Icon="grid_on" Style="z-index: 1000;">
+            @foreach (var item in MenuItems)
+            {
+                <RadzenMenuItem Text="@item.Text" Value="@item.Value" Path="@item.Path" Icon="@item.Icon"></RadzenMenuItem>
+            }
+        </RadzenMenuItem>
+    </RadzenMenu>
+}
+else
+{
+    <h2>@Translate(PageName)</h2>
+}
+
+@if (CanRender)
+{
+	<QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Account.IdentityDataGrid DataGridHandler="DataGridHandler" />
+}
+else
+{
+	<QnSTradingCompany.BlazorApp.Shared.Components.LoadingIndicator />
+}

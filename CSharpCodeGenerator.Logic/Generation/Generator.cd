@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CSharpCodeGenerator.Logic.Generation.AngularAppGenerator" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASIQCgBAAgIAEA0IKAAAAAAAAACAEEAA6AAAABAAAAA=</HashCode>
+      <FileName>Generation\AngularAppGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.AspMvcAppGenerator" Collapsed="true">
+    <Position X="14.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAABAABEAAAAIAAAAAAAA=</HashCode>
+      <FileName>Generation\AspMvcAppGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.BlazorAppGenerator" Collapsed="true">
+    <Position X="18.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>aBEkRIAECUGFUCgFiEkpIMAAEh0BBFAggo7AIAAAAYA=</HashCode>
+      <FileName>Generation\BlazorAppGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.BlazorUIGenerator" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KFAALDAAIAEBAAGEAQgAAIAIQFEgARILBAIFAAACAYA=</HashCode>
+      <FileName>Customize\BlazorUIGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.ClassGenerator" Collapsed="true">
+    <Position X="11" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAEAAAggAAAEAAIYCgAQACAAAFAQBAAAAAAAIBE=</HashCode>
+      <FileName>Generation\ClassGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.ConnectorGenerator" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAYQAAAIKAAAAYAAAgCAGEAgBADCAIEAgAE=</HashCode>
+      <FileName>Generation\ConnectorGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.ContractsProject" Collapsed="true">
+    <Position X="2.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAACAAAgAAhAIEAAEAAAgACAEAJAAQ=</HashCode>
+      <FileName>Generation\ContractsProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.ControllerGenerator" Collapsed="true">
+    <Position X="12" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAQCBAAAIAEQGKEAIAAAQIgECgEEAgAAAAAoAAAAg=</HashCode>
+      <FileName>Customize\ControllerGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.DataContextGenerator" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAaAQAAAAEAQAAAAAAEAAAQAAAAAAAwA=</HashCode>
+      <FileName>Generation\DataContextGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.EmbeddedTagManager" Collapsed="true">
+    <Position X="4" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAIAACAAAAAAQAA=</HashCode>
+      <FileName>Generation\EmbeddedTagManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.EmbeddedTagReplacer" Collapsed="true">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAQAAAAAAIBAADAAAQAAAAAQAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Generation\EmbeddedTagReplacer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.EntityGenerator" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAESAIEESAAQAABAIEQgAABCAhAIAEAEAAAAAAAQAAA=</HashCode>
+      <FileName>Generation\EntityGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.FactoryGenerator" Collapsed="true">
+    <Position X="9.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIBAAAAACAAAAAAAAQAABAAAAAAEAIAAAAAIQAAgA=</HashCode>
+      <FileName>Customize\FactoryGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.GeneratorObject" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAEIAAAAEABAABAAEAEAAAAAIgAAAIhAJCAUACGAQ=</HashCode>
+      <FileName>Generation\GeneratorObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.ModelGenerator" Collapsed="true">
+    <Position X="16.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBAAFAJAAAQgAAIQCEgAAQAAAhgABQAAAIIAAIgABAM=</HashCode>
+      <FileName>Generation\ModelGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.SolutionProperties" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBCAbGgiAjBkIU9UCkAoRCCfBgogNNABoAsRcmIMGIg=</HashCode>
+      <FileName>Generation\SolutionProperties.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.TransferGenerator" Collapsed="true">
+    <Position X="16.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBAABAAAAAAAAAAAAAgAAAAAABAABEAAAAIAAAAAAAA=</HashCode>
+      <FileName>Customize\TransferGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharpCodeGenerator.Logic.Generation.TranslationGenerator" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generation\TranslationGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,136 @@
+@*@QnSGeneratedCode*@
+@inherits DataGridColumnsComponent
+@using Radzen;
+@using CommonBase.Extensions;
+@using TContract = QnSTradingCompany.Contracts.Persistence.MasterData.IProduct;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.MasterData.Product;
+
+@{
+	var modelType = GetModelType();
+	var gridModelColumns = CreateGridModelColumns(modelType);
+
+    foreach (var item in gridModelColumns.OrderBy(e => e.Order))
+    {
+        EvaluateDisplayProperty(item.DisplayProperty);
+
+        if (item.ScaffoldItem && item.ListVisible)
+        {
+            if (item.IsIdColumn && item.CanRead)
+            {
+                <RadzenGridColumn TItem="TModel" Property="@item.PropertyName" Visible="@item.ListVisible" Width="@item.ListWidth" Sortable="@item.ListSortable" Filterable="@item.ListFilterable">
+                    <HeaderTemplate>
+                        <RadzenLabel Text="@TranslateFor(item.PropertyName)" />
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        @item.ToDisplay(data, item.Property.GetValue(data))
+                    </Template>
+                    <FooterTemplate>
+                        @item.GetFooterText(item.PropertyName)
+                    </FooterTemplate>
+                </RadzenGridColumn>
+            }
+            else if (item.IsEnumColumn && item.CanRead && item.CanWrite)
+            {
+                <RadzenGridColumn TItem="TModel" Property="@item.PropertyName" Visible="@item.ListVisible" Width="@item.ListWidth" Sortable="@item.ListSortable" Filterable="@item.ListFilterable">
+                    <HeaderTemplate>
+                        <RadzenLabel Text="@TranslateFor(item.PropertyName)" />
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        @item.ToDisplay(data, item.Property.GetValue(data))
+                    </Template>
+                    <EditTemplate Context="data">
+                        @if (item.Readonly)
+                        {
+                            @item.ToDisplay(data, item.Property.GetValue(data))
+                        }
+                        else
+                        {
+                            <RadzenDropDown Name="@TranslateFor(item.OriginName)" TValue="string" @bind-Value="@(new Models.Modules.Form.ValueBinder(data, item.Property).StringValue)" Data="@item.CreateEnumSelectItems()" ValueProperty="Value" TextProperty="Text" Style="width: 100%;" />
+                        }
+                    </EditTemplate>
+                    <FooterTemplate>
+                        @item.GetFooterText(item.PropertyName)
+                    </FooterTemplate>
+                </RadzenGridColumn>
+            }
+            else if (item.CanRead)
+            {
+                <RadzenGridColumn TItem="TModel" Property="@item.PropertyName" Visible="@item.ListVisible" Width="@item.ListWidth" Sortable="@item.ListSortable" Filterable="@item.ListFilterable">
+                    <HeaderTemplate>
+                        <RadzenLabel Text="@TranslateFor(item.PropertyName)" />
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        @item.ToDisplay(data, item.Property.GetValue(data))
+                    </Template>
+                    <EditTemplate Context="data">
+                        @if (item.Readonly)
+                        {
+                            @item.ToDisplay(data, item.Property.GetValue(data))
+                        }
+                        else
+                        {
+                            <RadzenTextBox Name="@TranslateFor(item.OriginName)" @bind-Value="@(new Models.Modules.Form.ValueBinder(data, item.Property).StringValue)" Style="width: 100%; display: block;" />
+                            @if (item.Required)
+                            {
+                                <RadzenRequiredValidator Text="@TranslateFor(item.PropertyName + " is required")" Component="@TranslateFor(item.PropertyName)" Popup="true" />
+                            }
+                        }
+                    </EditTemplate>
+                    <FooterTemplate>
+                        @item.GetFooterText(item.PropertyName)
+                    </FooterTemplate>
+                </RadzenGridColumn>
+            }
+        }
+    }
+}
+
+@if (AllowAdd || AllowEdit)
+{
+    <RadzenGridColumn TItem="TModel" Bubble="false" Filterable="true" Sortable="false" TextAlign="TextAlign.Center" Width="45px">
+        <HeaderTemplate>
+            <RadzenButton Visible="AllowAdd" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Small" Click="@(args => DataGridHandler.AddItemAsync())" />
+        </HeaderTemplate>
+
+        <Template Context="item">
+            <RadzenButton Visible="AllowEdit" Icon="edit_circle_outline" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="@(args => DataGridHandler.EditRowAsync(item))" />
+        </Template>
+
+        <EditTemplate Context="item">
+            <RadzenButton Visible="AllowEdit" Icon="save_circle_outline" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="@(args => DataGridHandler.CommitEditRow(item))" />
+        </EditTemplate>
+    </RadzenGridColumn>
+}
+@if (AllowEdit || AllowDelete)
+{
+    <RadzenGridColumn TItem="TModel" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="45px">
+        <Template Context="item">
+            <RadzenButton Visible="AllowDelete" Icon="delete_circle_outline" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="@(args => DataGridHandler.DeleteRowAsync(item))" />
+        </Template>
+        <EditTemplate Context="item">
+            <RadzenButton Visible="AllowEdit" Icon="cancel_circle_outline" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(args => DataGridHandler.CancelEditRow(item))" />
+        </EditTemplate>
+    </RadzenGridColumn>
+}
+
+@code {
+    bool AllowAdd => DataGridHandler.AllowAdd;
+    bool AllowEdit => DataGridHandler.AllowEdit;
+    bool AllowDelete => DataGridHandler.AllowDelete;
+    bool AllowInlineEdit => DataGridHandler.AllowInlineEdit;
+
+    IEnumerable<Models.Modules.Form.GridModelColumn> CreateGridModelColumns(Type modelType)
+    {
+        var result = new List<Models.Modules.Form.GridModelColumn>();
+
+        foreach (var item in modelType.GetAllPropertyInfos())
+        {
+
+            var displayProperty = GetOrCreateDisplayProperty(modelType, item);
+
+            result.Add(CreateGridModelColumn(modelType, item, displayProperty));
+        }
+        return result;
+    }
+}
+

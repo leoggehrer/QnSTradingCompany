@@ -1,0 +1,19 @@
+@*@QnSCodeCopy*@
+
+@*DefaultPage*@
+@if (MenuItems.Count > 0)
+{
+    <RadzenMenu Click="@(args => OnMenuItemClick(args))">
+        <RadzenMenuItem Text="@Translate(PageName)" Icon="grid_on" Style="z-index: 1000;">
+            @foreach (var item in MenuItems)
+            {
+                <RadzenMenuItem Text="@item.Text" Value="@item.Value" Path="@item.Path" Icon="@item.Icon"></RadzenMenuItem>
+            }
+        </RadzenMenuItem>
+    </RadzenMenu>
+}
+else
+{
+    <h2>@Translate(PageName)</h2>
+}
+@*DefaultPage*@

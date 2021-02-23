@@ -1,0 +1,13 @@
+@*@QnSCodeCopy*@
+@inherits Pages.ModelPage
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Account.Role;
+
+@*DefaultPage*@
+
+@code {
+    TModel EditModel => DataGridHandler.EditModel;
+    Func<string, string> LocalTranslate => DataGridHandler.Translate;
+    Func<string, string> LocalTranslateFor => DataGridHandler.TranslateFor;
+}
+@*DefaultPage*@

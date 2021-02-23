@@ -1,0 +1,29 @@
+@*@QnSGeneratedCode*@
+@inherits FieldSetComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Account.IdentityXRole;
+
+@if (CanFieldCreate(nameof(EditModel.IdentityId)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.IdentityId))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.IdentityId" Name="@TranslateFor(nameof(EditModel.IdentityId))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.RoleId)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.RoleId))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.RoleId" Name="@TranslateFor(nameof(EditModel.RoleId))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+

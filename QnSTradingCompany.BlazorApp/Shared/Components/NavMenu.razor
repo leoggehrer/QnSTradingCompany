@@ -1,0 +1,17 @@
+@*@QnSCodeCopy*@
+@inherits CommonMenu
+
+@if (CanRender)
+{
+	foreach (var catItem in MenuItems.Where(e => e.Parent == null).OrderBy(e => e.Order))
+	{
+		var subItems = MenuItems.Where(e => e.Parent == catItem).OrderBy(e => e.Order);
+
+		<RadzenPanelMenuItem Text="@catItem.Text" Path="@catItem.Path" Icon="@catItem.Icon">
+			@foreach (var subItem in subItems)
+			{
+				<RadzenPanelMenuItem Text="@subItem.Text" Value="@subItem.Value" Path="@subItem.Path" Icon="@subItem.Icon"></RadzenPanelMenuItem>
+			}
+		</RadzenPanelMenuItem>
+	}
+}

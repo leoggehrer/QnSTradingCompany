@@ -1,0 +1,43 @@
+@*@QnSGeneratedCode*@
+@inherits FieldSetComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Configuration.Setting;
+
+@if (CanFieldCreate(nameof(EditModel.AppName)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.AppName))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.AppName" MaxLength="128" Name="@TranslateFor(nameof(EditModel.AppName))" Style="width: 100%;" />
+            <RadzenRequiredValidator Text="@TranslateFor(nameof(EditModel.AppName) + " is required")" Component="@TranslateFor(nameof(EditModel.AppName))" Popup="false" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Key)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Key))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.Key" MaxLength="512" Name="@TranslateFor(nameof(EditModel.Key))" Style="width: 100%;" />
+            <RadzenRequiredValidator Text="@TranslateFor(nameof(EditModel.Key) + " is required")" Component="@TranslateFor(nameof(EditModel.Key))" Popup="false" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Value)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Value))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.Value" MaxLength="4096" Name="@TranslateFor(nameof(EditModel.Value))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+

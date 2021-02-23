@@ -1,0 +1,138 @@
+@*@QnSGeneratedCode*@
+@inherits FieldSetComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Account.LoginSession;
+
+@if (CanFieldCreate(nameof(EditModel.IdentityId)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.IdentityId))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.IdentityId" Name="@TranslateFor(nameof(EditModel.IdentityId))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Origin)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Origin))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextBox @bind-Value="@EditModel.Origin" MaxLength="-1" Name="@TranslateFor(nameof(EditModel.Origin))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Name)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Name))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextBox @bind-Value="@EditModel.Name" MaxLength="-1" Name="@TranslateFor(nameof(EditModel.Name))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.Email)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.Email))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextBox @bind-Value="@EditModel.Email" MaxLength="-1" Name="@TranslateFor(nameof(EditModel.Email))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.TimeOutInMinutes)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.TimeOutInMinutes))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenNumeric TValue="Int32" @bind-Value="@EditModel.TimeOutInMinutes" Name="@TranslateFor(nameof(EditModel.TimeOutInMinutes))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.JsonWebToken)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.JsonWebToken))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextBox @bind-Value="@EditModel.JsonWebToken" MaxLength="-1" Name="@TranslateFor(nameof(EditModel.JsonWebToken))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.SessionToken)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.SessionToken))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.SessionToken" MaxLength="128" Name="@TranslateFor(nameof(EditModel.SessionToken))" Style="width: 100%;" />
+            <RadzenRequiredValidator Text="@TranslateFor(nameof(EditModel.SessionToken) + " is required")" Component="@TranslateFor(nameof(EditModel.SessionToken))" Popup="false" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.LoginTime)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.LoginTime))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenDatePicker TValue="DateTime" @bind-Value="@EditModel.LoginTime" DateFomat="d" Name="@TranslateFor(nameof(EditModel.LoginTime))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.LastAccess)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.LastAccess))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenDatePicker TValue="DateTime" @bind-Value="@EditModel.LastAccess" DateFomat="d" Name="@TranslateFor(nameof(EditModel.LastAccess))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.LogoutTime)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.LogoutTime))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenDatePicker TValue="Nullable<System.DateTime>" @bind-Value="@EditModel.LogoutTime" DateFomat="d" Name="@TranslateFor(nameof(EditModel.LogoutTime))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+
+@if (CanFieldCreate(nameof(EditModel.OptionalInfo)))
+{
+    <div class="row">
+        <div class="col-md-4 align-items-center d-flex">
+            <RadzenLabel Text="@TranslateFor(nameof(EditModel.OptionalInfo))" />
+        </div>
+        <div class="col-md-8" style="margin-top: 16px;">
+            <RadzenTextArea @bind-Value="@EditModel.OptionalInfo" MaxLength="4096" Name="@TranslateFor(nameof(EditModel.OptionalInfo))" Style="width: 100%;" />
+        </div>
+    </div>
+}
+

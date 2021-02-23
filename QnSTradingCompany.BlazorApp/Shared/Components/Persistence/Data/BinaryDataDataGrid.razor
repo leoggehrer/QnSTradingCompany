@@ -1,0 +1,144 @@
+@*@QnSGeneratedCode*@
+@inherits DataGridComponent
+@using Radzen;
+@using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.Data.BinaryData;
+
+@if (DataGridSetting.HasDataGridProgress)
+{
+    <style>
+        .progress {
+            text-align: center;
+        }
+        .progress-value {
+            color: #343a40;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            position: absolute;
+            right: 0;
+            left: 0;
+        }
+    </style>
+    int progressTo = 0;
+
+    if (DataGridHandler.Count > 0)
+    {
+        progressTo = (int)(DataGridHandler.To / (double)DataGridHandler.Count * 100);
+    }
+
+    var widthTo = $"width: {progressTo}%;";
+    var text = $"{DataGridHandler.From}-{DataGridHandler.To}/{DataGridHandler.Count}";
+
+    <div class="row">
+        <div class="progress" style="width: 100%; margin: 10px 20px 10px 20px;">
+            <span class="progress-value">@text</span>
+            <div class="progress-bar bg-info" role="progressbar" style="@widthTo" aria-valuenow="@progressTo" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+}
+
+<RadzenGrid TItem="TModel"
+            PageSize="@DataGridHandler.PageSize"
+            AllowPaging="@DataGridHandler.AllowPaging"
+            AllowSorting="@DataGridHandler.AllowSorting"
+            AllowFiltering="@DataGridHandler.AllowFiltering"
+            ExpandMode="DataGridExpandMode.Single"
+            Count="@DataGridHandler.Count"
+            Data="@DataGridHandler.Models"
+            LoadData="@DataGridHandler.LoadDataAsync"
+            RowRender="@DataGridHandler.RowRender"
+            RowCollapse="@DataGridHandler.RowCollapse"
+            RowExpand="@DataGridHandler.RowExpand"
+            RowSelect="@DataGridHandler.RowSelectedAsync"
+            RowDoubleClick="@DataGridHandler.RowDoubleClickAsync"
+            RowUpdate="@DataGridHandler.UpdateRowAsync"
+            ValueChanged="@DataGridHandler.ValueChanged"
+            @ref="DataGridHandler.RadzenGrid">
+    <Columns>
+        <BinaryDataDataGridColumns ParentComponent=@this DataGridHandler=@DataGridHandler />
+    </Columns>
+    <Template>
+        <BinaryDataDataGridDetail ParentComponent=@this MasterDataGridHandler=@DataGridHandler />
+    </Template>
+</RadzenGrid>
+
+@code {
+    TModel EditModel => DataGridHandler.EditModel;
+    TModel DeleteModel => DataGridHandler.DeleteModel;
+    EditContext editContext => new EditContext(EditModel);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        DataGridHandler.ShowNotification = ShowNotification;
+        DataGridHandler.ShowEditItemAsync = ShowEditItemDialogAsync;
+        DataGridHandler.ShowConfirmDeleteAsync = ShowConfirmDeleteDialogAsync;
+        DialogService.OnClose += DataGridHandler.OnCloseDialog;
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    async Task ShowEditItemDialogAsync() => await DialogService.OpenAsync(TranslateFor("TitleEditModel"), ds =>
+    @<EditForm EditContext="@editContext">
+        <DataAnnotationsValidator />
+        <div class="card" style="padding: 10px;">
+            @if (DataGridSetting.HasEditDialogHeader)
+            {
+                <div class="card-header" style="background-color: transparent; border-bottom-style: none;">
+                    <div class="row justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" @onclick="() => DataGridHandler.CancelEditDialog(ds)">@TranslateFor("Cancel")</button>
+                        <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitEditAsync(ds)">@TranslateFor("Submit")</button>
+                    </div>
+                </div>
+            }
+            <div class="card-body">
+                <EditModelComponent ModelPage=@DataGridHandler.ModelPage ParentComponent=@this Model=@EditModel />
+            </div>
+
+            @if (DataGridSetting.HasEditDialogFooter)
+            {
+                <div class="card-footer" style="background-color: transparent; border-top-style: none;">
+                    <div class="row justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelEditDialog(ds)">@TranslateFor("Cancel")</button>
+                        <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitEditAsync(ds)">@TranslateFor("Submit")</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </EditForm>
+    , EditOptions);
+
+    async Task ShowConfirmDeleteDialogAsync() => await DialogService.OpenAsync(TranslateFor("TitleConfirmDelete"), ds =>
+    @<div class="card" style="padding: 10px;">
+        @if (DataGridSetting.HasDeleteDialogHeader)
+        {
+            <div class="card-header" style="background-color: transparent; border-bottom-style: none; margin-bottom: 1em;">
+                <div class="row justify-content-between">
+                    <button type="submit" class="btn btn-outline-danger" @onclick="() => DataGridHandler.ConfirmDeleteItemAsync(ds)">@TranslateFor("Confirm")</button>
+                    <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelDeleteDialog(ds)">@TranslateFor("Cancel")</button>
+                </div>
+            </div>
+        }
+        <div class="card-header alert alert-danger">
+            @Translate("Are you sure you want to delete this?")
+        </div>
+        <div class="card-body">
+            <DisplayModelComponent ModelPage=@DataGridHandler.ModelPage ParentComponent=@this Model="@DeleteModel" />
+        </div>
+
+        @if (DataGridSetting.HasDeleteDialogFooter)
+        {
+            <div class="card-footer" style="background-color: transparent; border-top-style: none;">
+                <div class="row justify-content-between">
+                    <button type="submit" class="btn btn-outline-danger" @onclick="() => DataGridHandler.ConfirmDeleteItemAsync(ds)">@TranslateFor("Confirm")</button>
+                    <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelDeleteDialog(ds)">@TranslateFor("Cancel")</button>
+                </div>
+            </div>
+        }
+    </div>
+    , DeleteOptions);
+}
+

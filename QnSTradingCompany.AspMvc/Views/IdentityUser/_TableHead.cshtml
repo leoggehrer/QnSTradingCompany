@@ -1,0 +1,32 @@
+@*@QnSCodeCopy*@
+@*This partial view can alternatively be used with the shared index view.*@
+@model IEnumerable<QnSTradingCompany.AspMvc.Models.Business.Account.IdentityUser>
+
+@{
+    Func<string, string> translateFor = ViewData["TranslateFor"] as Func<string, string>;
+}
+
+<tr>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.OneItem.Name))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.OneItem.Email))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.AnotherItem.Lastname))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.AnotherItem.Firstname))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.OneItem.EnableJwtAuth))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.OneItem.AccessFailedCount))
+    </th>
+    <th>
+        @translateFor(Html.DisplayNameFor(model => model.OneItem.State))
+    </th>
+    <th></th>
+</tr>

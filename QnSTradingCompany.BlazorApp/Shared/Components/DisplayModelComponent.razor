@@ -1,0 +1,38 @@
+@*@QnSCodeCopy*@
+@inherits CommonComponent
+
+@foreach (var item in ModelMembers.Where(m => m.IsVisible))
+{
+    var displayValue = item.DisplayValue;
+    var isTextArea = displayValue.Length > 100 || displayValue.Contains(Environment.NewLine);
+    var description = item.Description ?? string.Empty;
+
+    @if (item.PropertyType.Equals(typeof(bool)))
+    {
+        var value = (bool)item.Value;
+
+        <div class="form-check" style="padding-bottom: 10px;">
+            <input type="checkbox" class="form-check-input" id="@item.FullName" @bind="@value" disabled />
+            <label class="form-check-label" for="@item.FullName">@TranslateFor(item.Name)</label>
+        </div>
+    }
+    else if (isTextArea)
+    {
+        <div class="mb-3">
+            <label class="form-label" for="@item.FullName">@TranslateFor(item.Name)</label>
+            <textarea id="@item.FullName" class="form-control" style="border-color: lightgray; background-color: whitesmoke; font-weight: bold;" readonly data-bs-toggle="tooltip" data-bs-placement="bottom" title="@description">
+                @displayValue
+            </textarea>
+        </div>
+    }
+    else
+    {
+        <div class="mb-3">
+            <label class="form-label" for="@item.FullName">@TranslateFor(item.Name)</label>
+            <label id="@item.FullName" class="form-control" style="border-color: lightgray; background-color: whitesmoke; font-weight: bold;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="@description">
+                @item.DisplayValue
+            </label>
+        </div>
+    }
+}
+

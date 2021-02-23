@@ -1,0 +1,165 @@
+@*@QnSCodeCopy*@
+@inherits AccessComponent
+
+@if (Model != null)
+{
+    string mlAutoCss = "ml-auto";
+
+    <div class="d-flex bg-white">
+        <div class="dropdown p-2" data-toggle="tooltip" title="@Translate("PageIndex")">
+            <button class="dropdown-toggle btn btn-outline-secondary" style="min-width: 8.0em;" type="button" id="dropdownMenuPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @($"{MinIndexRange(Model.PageIndex)}..{MaxIndexRange(Model.PageIndex)} / {Model.PageCount}")
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuPageIndex">
+                @{
+                    int pageDeltaPage = 10;
+                    int lowerIdx = Model.PageIndex - pageDeltaPage;
+                    int upperIdx = Model.PageIndex + pageDeltaPage;
+
+                    for (int idx = lowerIdx; idx <= upperIdx; idx++)
+                    {
+                        if (CheckIndex(idx))
+                        {
+                            int locIdx = idx;
+                            string text = $"{MinIndexRange(idx)}..{MaxIndexRange(idx)}";
+
+                            if (locIdx == Model.PageIndex)
+                            {
+                                <button type="button" class="dropdown-item active" @onclick="@(() => ChangePageIndex(locIdx))">@text</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="dropdown-item" @onclick="@(() => ChangePageIndex(locIdx))">@text</button>
+                            }
+                        }
+                    }
+                }
+            </div>
+        </div>
+        <ul class="pagination p-2">
+            <li class="page-item">
+                @if (Model.PageIndex > 0)
+                {
+                    <button type="button" class="page-link" @onclick="@(() => MovePageIndexPrev())" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">@Translate("Previous")</span>
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="page-link" disabled>
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                }
+            </li>
+            @{
+                int deltaPage = 10;
+                int pageLowerIdx = 0;
+                int pageUpperIdx = deltaPage;
+                int pageLowerRange = (pageLowerIdx * Model.PageSize);
+
+                while (pageLowerRange <= Model.PageCount)
+                {
+                    if (Model.PageIndex >= pageLowerIdx && Model.PageIndex < pageUpperIdx)
+                    {
+                        int startIdx = pageLowerIdx;
+
+                        while (startIdx > 0 && startIdx + deltaPage - 1 > Model.MaxPageIndex)
+                        {
+                            startIdx--;
+                        }
+                        for (int idx = startIdx; idx < pageUpperIdx && (idx * Model.PageSize) < Model.PageCount; idx++)
+                        {
+                            int locIdx = idx;
+                            string text = $"{MinIndexRange(idx)}..{MaxIndexRange(idx)}";
+
+                            if (locIdx == Model.PageIndex)
+                            {
+                                <li class="page-item active">
+                                    <button type="button" class="page-link" style="min-width: 3.0em" @onclick="@(() => ChangePageIndex(locIdx))" data-toggle="tooltip" title="@text">@(locIdx + 1)</button>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <button type="button" class="page-link" style="min-width: 3.0em" @onclick="@(() => ChangePageIndex(locIdx))" data-toggle="tooltip" title="@text">@(locIdx + 1)</button>
+                                </li>
+                            }
+                        }
+                    }
+                    pageLowerIdx = pageUpperIdx;
+                    pageUpperIdx = pageUpperIdx + deltaPage;
+                    pageLowerRange = (pageLowerIdx * Model.PageSize);
+                }
+            }
+            <li class="page-item">
+                @if ((Model.PageIndex + 1) * Model.PageSize < Model.PageCount)
+                {
+                    <button type="button" class="page-link" @onclick="@(() => MovePageIndexNext())" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">@Translate("Next")</span>
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="page-link" disabled>
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                }
+            </li>
+        </ul>
+        @if (Model.HasFilters)
+        {
+            foreach (var dropdownItems in Model.Filters)
+            {
+                string action = string.Empty;
+                string filterTitle = Translate("No filter selected");
+
+                <div class="dropdown p-2 @mlAutoCss" data-toggle="tooltip" title="@Translate("FilterItems")">
+                    <div class="dropdown-menu">
+                        @foreach (var item in dropdownItems)
+                        {
+                            if (item.Active)
+                            {
+                                filterTitle = Translate(item.Display);
+                                <a class="dropdown-item active" href="@action">@filterTitle</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="@action">@Translate(item.Display)</a>
+                            }
+                        }
+                    </div>
+                    <button type="button" class="dropdown-toggle btn bg-light btn-outline-dark" style="min-width: 12.0em;" name="pageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        @filterTitle
+                        <span class="caret"></span>
+                    </button>
+                </div>
+                mlAutoCss = string.Empty;
+            }
+        }
+
+        <div class="dropdown p-2 @mlAutoCss" style="min-width: 5.0em;" data-toggle="tooltip" title="@Translate("PageSize")">
+            <button type="button" class="dropdown-toggle btn btn-outline-secondary" name="pageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                @Model.PageSize
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu">
+                @foreach (int size in Model.PageSizes)
+                {
+                    int locSize = size;
+
+                    if (locSize == Model.PageSize)
+                    {
+                        <a class="dropdown-item active" @onclick="@(() => ChangePageSize(locSize))">@locSize</a>
+                    }
+                    else
+                    {
+                        <a class="dropdown-item" @onclick="@(() => ChangePageSize(locSize))">@locSize</a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
