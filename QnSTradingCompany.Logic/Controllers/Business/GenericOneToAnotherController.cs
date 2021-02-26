@@ -36,7 +36,7 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         public GenericOneToAnotherController(DataContext.IContext context) : base(context)
         {
             Constructing();
-            ChangedSessionToken += GenericOneToAnotherController_ChangedSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
             Constructed();
         }
         partial void Constructing();
@@ -44,11 +44,10 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         public GenericOneToAnotherController(ControllerObject controller) : base(controller)
         {
             Constructing();
-            ChangedSessionToken += GenericOneToAnotherController_ChangedSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
             Constructed();
         }
-
-        protected virtual void GenericOneToAnotherController_ChangedSessionToken(object sender, EventArgs e)
+        private void HandleChangedSessionToken(object sender, EventArgs e)
         {
             OneEntityController.SessionToken = SessionToken;
             AnotherEntityController.SessionToken = SessionToken;
@@ -286,14 +285,10 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         #region Invoke handler
         public override Task InvokeActionAsync(string name, params object[] parameters)
         {
-            var helper = new InvokeHelper();
-
             return InvokeHelper.InvokeActionAsync(this, name, parameters);
         }
         public override Task<object> InvokeFunctionAsync(string name, params object[] parameters)
         {
-            var helper = new InvokeHelper();
-
             return InvokeHelper.InvokeFunctionAsync(this, name, parameters);
         }
         #endregion Invoke handler
@@ -304,6 +299,8 @@ namespace QnSTradingCompany.Logic.Controllers.Business
 
             if (disposing)
             {
+                ChangedSessionToken -= HandleChangedSessionToken;
+
                 OneEntityController.Dispose();
                 AnotherEntityController.Dispose();
 

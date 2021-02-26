@@ -36,7 +36,7 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         public GenericOneToManyController(DataContext.IContext context) : base(context)
         {
             Constructing();
-            ChangedSessionToken += GenericOneToManyController_ChangedSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
             Constructed();
         }
         partial void Constructing();
@@ -44,11 +44,11 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         public GenericOneToManyController(ControllerObject controller) : base(controller)
         {
             Constructing();
-            ChangedSessionToken += GenericOneToManyController_ChangedSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
             Constructed();
         }
 
-        private void GenericOneToManyController_ChangedSessionToken(object sender, EventArgs e)
+        private void HandleChangedSessionToken(object sender, EventArgs e)
         {
             OneEntityController.SessionToken = SessionToken;
             ManyEntityController.SessionToken = SessionToken;
@@ -370,14 +370,10 @@ namespace QnSTradingCompany.Logic.Controllers.Business
         #region Invoke handler
         public override Task InvokeActionAsync(string name, params object[] parameters)
         {
-            var helper = new InvokeHelper();
-
             return InvokeHelper.InvokeActionAsync(this, name, parameters);
         }
         public override Task<object> InvokeFunctionAsync(string name, params object[] parameters)
         {
-            var helper = new InvokeHelper();
-
             return InvokeHelper.InvokeFunctionAsync(this, name, parameters);
         }
         #endregion Invoke handler
@@ -388,6 +384,8 @@ namespace QnSTradingCompany.Logic.Controllers.Business
 
             if (disposing)
             {
+                ChangedSessionToken -= HandleChangedSessionToken;
+
                 OneEntityController.Dispose();
                 ManyEntityController.Dispose();
 

@@ -5,8 +5,8 @@ using System;
 
 namespace CSharpCodeGenerator.Logic.Common
 {
-    [Flags]
-    public enum UnitType : int
+	[Flags]
+    public enum UnitType : long
     {
         General = 1,
 

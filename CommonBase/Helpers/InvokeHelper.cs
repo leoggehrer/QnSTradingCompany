@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CommonBase.Helpers
 {
-    public sealed partial class InvokeHelper
+    public static partial class InvokeHelper
     {
         public static void InvokeAction(object target, string name, params object[] parameters)
         {
