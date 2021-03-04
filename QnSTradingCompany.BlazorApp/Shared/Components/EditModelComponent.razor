@@ -1,77 +1,85 @@
 @*@QnSCodeCopy*@
 @using CommonBase.Extensions
-@inherits CommonComponent
+@inherits DisplayComponent
 
-@{
-    foreach (var item in ModelMembers.Where(m => m.IsVisible))
-    {
-        var validateType = (item.EditCtrlType & Modules.Common.ControlType.ValidateType) > 0;
-        var cssCtrl = $"mb-3{(validateType ? " was-validated" : string.Empty)}";
-        var styleCtrl = "border-color: red;";
-        var htmlInfo = new Models.Modules.Form.HtmlInfo()
-        {
-            CssClass = "form-control",
-            Enabled = true,
-            Readonly = item.ReadOnly,
-            Required = item.Required || item.PropertyType.IsNullableType() == false,
-        };
+<EditForm EditContext="new EditContext(Model)">
+    <DataAnnotationsValidator />
 
-        if (item.EditCtrlType == Modules.Common.ControlType.CheckBox)
+    @{
+        foreach (var item in ModelMembers)
         {
-            cssCtrl = "form-check";
-            htmlInfo.Required = true;
-            htmlInfo.CssClass = "form-check-input";
-        }
-        if (item.EditCtrlType == Modules.Common.ControlType.CheckBoxNull)
-        {
-            cssCtrl = "form-check";
-            htmlInfo.Required = false;
-            htmlInfo.CssClass = "form-check-input";
-        }
-        else if (item.EditCtrlType == Modules.Common.ControlType.Numeric)
-        {
-            htmlInfo.Required = true;
-        }
-        else if (item.EditCtrlType == Modules.Common.ControlType.FloatingPoint)
-        {
-            htmlInfo.Required = true;
-        }
-        else if (item.EditCtrlType == Modules.Common.ControlType.NumericNull)
-        {
-            htmlInfo.Required = false;
-        }
-        else if (item.EditCtrlType == Modules.Common.ControlType.FloatingPointNull)
-        {
-            htmlInfo.Required = false;
-        }
+            EvaluateDisplayProperty(item.DisplayProperty);
 
-        <div class="@cssCtrl" style="@styleCtrl">
-
-            @if (item.EditCtrlType == Modules.Common.ControlType.CheckBox
-           || item.EditCtrlType == Modules.Common.ControlType.CheckBoxNull)
+            if (item.DisplayProperty.ScaffoldItem && item.DisplayProperty.EditVisible)
             {
-                <EditControlComponent ModelMember="@item" HtmlInfo="@htmlInfo" />
-                <label class="form-check-label" for="@item.FullName">@TranslateFor(item.Name)</label>
-            }
-            else
-            {
-                <label class="form-label" for="@item.FullName">@TranslateFor(item.Name)</label>
-                <EditControlComponent ModelMember="@item" HtmlInfo="@htmlInfo" />
-            }
-            @if (htmlInfo.Required)
-            {
-                var translated = Translate("The field '{0}' is required!");
-                var message = string.Format(translated, TranslateFor(item.Name));
+                var validateType = (item.EditCtrlType & Modules.Common.ControlType.ValidateType) > 0;
+                var cssCtrl = $"mb-3{(validateType ? " was-validated" : string.Empty)}";
+                var styleCtrl = "border-color: red;";
+                var htmlInfo = new Models.Modules.Form.HtmlInfo()
+                {
+                    CssClass = "form-control",
+                    Enabled = true,
+                    Readonly = item.Readonly,
+                    Required = item.Required || item.PropertyType.IsNullableType() == false,
+                };
 
-                <div class="invalid-feedback">@message</div>
-            }
-            @if (item.LastError != null)
-            {
-                var translated = Translate(item.LastError.Message);
-                var message = string.Format(translated, TranslateFor(item.Name));
+                if (item.EditCtrlType == Modules.Common.ControlType.CheckBox)
+                {
+                    cssCtrl = "form-check";
+                    htmlInfo.Required = true;
+                    htmlInfo.CssClass = "form-check-input";
+                }
+                if (item.EditCtrlType == Modules.Common.ControlType.CheckBoxNull)
+                {
+                    cssCtrl = "form-check";
+                    htmlInfo.Required = false;
+                    htmlInfo.CssClass = "form-check-input";
+                }
+                else if (item.EditCtrlType == Modules.Common.ControlType.Numeric)
+                {
+                    htmlInfo.Required = true;
+                }
+                else if (item.EditCtrlType == Modules.Common.ControlType.FloatingPoint)
+                {
+                    htmlInfo.Required = true;
+                }
+                else if (item.EditCtrlType == Modules.Common.ControlType.NumericNull)
+                {
+                    htmlInfo.Required = false;
+                }
+                else if (item.EditCtrlType == Modules.Common.ControlType.FloatingPointNull)
+                {
+                    htmlInfo.Required = false;
+                }
 
-                <div class="invalid-feedback">@message</div>
+                <div class="@cssCtrl" style="@styleCtrl">
+                    @if (item.EditCtrlType == Modules.Common.ControlType.CheckBox
+                || item.EditCtrlType == Modules.Common.ControlType.CheckBoxNull)
+                    {
+                        <EditControlComponent ModelMember="@item" HtmlInfo="@htmlInfo" />
+                        <label class="form-check-label" for="@item.FullName">@TranslateFor(item.Name)</label>
+                    }
+                    else
+                    {
+                        <label class="form-label" for="@item.FullName">@TranslateFor(item.Name)</label>
+                        <EditControlComponent ModelMember="@item" HtmlInfo="@htmlInfo" />
+                    }
+                    @if (htmlInfo.Required)
+                    {
+                        var translated = Translate("The field '{0}' is required!");
+                        var message = string.Format(translated, TranslateFor(item.Name));
+
+                        <div class="invalid-feedback">@message</div>
+                    }
+                    @if (item.LastError != null)
+                    {
+                        var translated = Translate(item.LastError.Message);
+                        var message = string.Format(translated, TranslateFor(item.Name));
+
+                        <div class="invalid-feedback">@message</div>
+                    }
+                </div>
             }
-        </div>
+        }
     }
-}
+</EditForm>

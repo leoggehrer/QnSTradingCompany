@@ -1,7 +1,6 @@
 //@QnSCodeCopy
 //MdStart
 using CommonBase.Extensions;
-using Microsoft.EntityFrameworkCore;
 using QnSTradingCompany.Contracts.Business.Account;
 using QnSTradingCompany.Logic.Controllers.Persistence.Account;
 using QnSTradingCompany.Logic.Entities.Business.Account;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.Logic.Controllers.Business.Account
 {
-    internal partial class AppAccessController
+	internal partial class AppAccessController
     {
         private IdentityXRoleController IdentityXRoleController { get; set; }
 
@@ -32,9 +31,7 @@ namespace QnSTradingCompany.Logic.Controllers.Business.Account
         {
             entity.ClearManyItems();
 
-            var query = await IdentityXRoleController.QueryableSet()
-                                                     .Where(p => p.IdentityId == masterId)
-                                                     .ToArrayAsync()
+            var query = await IdentityXRoleController.ExecuteWhereAsync(p => p.IdentityId == masterId)
                                                      .ConfigureAwait(false);
 
             foreach (var item in query)
@@ -71,8 +68,7 @@ namespace QnSTradingCompany.Logic.Controllers.Business.Account
                 {
                     item.Designation = RoleController.ClearRoleDesignation(item.Designation);
 
-                    var qryItem = await manyEntityController.QueryableSet()
-                                                            .FirstOrDefaultAsync(e => e.Designation.Equals(item.Designation))
+                    var qryItem = await manyEntityController.ExecuteFirstOrDefaultAsync(e => e.Designation.Equals(item.Designation))
                                                             .ConfigureAwait(false);
 
                     if (qryItem != null)
@@ -118,8 +114,7 @@ namespace QnSTradingCompany.Logic.Controllers.Business.Account
                 role.CopyProperties(item);
                 if (role.Id == 0)
                 {
-                    var qyrRole = await manyEntityController.QueryableSet()
-                                                            .FirstOrDefaultAsync(e => e.Designation.Equals(item.Designation))
+                    var qyrRole = await manyEntityController.ExecuteFirstOrDefaultAsync(e => e.Designation.Equals(item.Designation))
                                                             .ConfigureAwait(false);
                     if (qyrRole != null)
                     {

@@ -3,7 +3,7 @@
 
 using CommonBase.Extensions;
 using QnSTradingCompany.BlazorApp.Modules.Common;
-using QnSTradingCompany.BlazorApp.Pages;
+using QnSTradingCompany.BlazorApp.Shared.Components;
 using Radzen;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,10 @@ using System.Reflection;
 
 namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
 {
-	public partial class EditModelMember : ModelMember
+    public partial class EditModelMember : ModelMember
     {
-        public bool ReadOnly { get; set; }
+        public CommonComponent CommonComponent { get; init; }
+        public bool Readonly { get; set; }
         public string DefaultValue => PropertyAttribute != null ? PropertyAttribute.DefaultValue : string.Empty;
         public string HtmlCssClass { get; set; }
         public string HtmlAttributes { get; set; }
@@ -33,21 +34,18 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
                     if (result)
                     {
                         Property.SetValue(Model, typeValue);
-                        //Model.RemoveError(FullName);
                         LastError = null;
                     }
                     else
                     {
                         LastError = new ModelError(FullName, "The input for {0} cannot be converted.", new object[] { FullName });
                         ShowError(LastError);
-                        //Model.SetError(new ModelError(FullName, "The input for {0} cannot be converted.", new object[] { FullName }));
                     }
                 }
                 catch (Exception ex)
                 {
                     LastError = new ModelError(FullName, ex.Message);
                     ShowError(LastError);
-//                    Model.SetError(new ModelError(FullName, ex.Message));
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
@@ -236,10 +234,13 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
             }
         }
 
-        public EditModelMember(ModelPage page, ModelObject model, PropertyInfo propertyInfo)
-            : base(page, model, propertyInfo)
+        public EditModelMember(CommonComponent commonComponent, ModelObject model, PropertyInfo propertyInfo, DisplayProperty displayProperty)
+            : base(model, propertyInfo, displayProperty)
         {
-            ReadOnly = propertyInfo.CanWrite == false;
+            commonComponent.CheckArgument(nameof(commonComponent));
+
+            CommonComponent = commonComponent;
+            Readonly = propertyInfo.CanWrite == false;
             if (propertyInfo.PropertyType.Equals(typeof(string)))
             {
                 if (MaxLength > 100)
@@ -299,7 +300,7 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
 
         private void ShowError(ModelError modelError)
         {
-            Page.NotificationService.Notify(new NotificationMessage()
+            CommonComponent.NotificationService.Notify(new NotificationMessage()
             {
                 Severity = NotificationSeverity.Error,
                 Summary = modelError.Key,

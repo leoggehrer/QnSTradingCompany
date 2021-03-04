@@ -5,7 +5,7 @@ using System;
 
 namespace CSharpCodeGenerator.Logic.Common
 {
-	[Flags]
+    [Flags]
     public enum ItemType : long
     {
         BusinessEntity = 1,
@@ -46,11 +46,14 @@ namespace CSharpCodeGenerator.Logic.Common
         FieldSetDetailComponentRazor = 8192 * 8192 * 2,
         FieldSetDetailComponentCode = 8192 * 8192 * 4,
 
-        TypeScriptEnum = 8192 * 8192 * 8,
-        TypeScriptContract = 8192 * 8192 * 16,
+        EditFormComponentRazor = 8192 * 8192 * 8,
+        EditFormComponentCode = 8192 * 8192 * 16,
 
-        Translations = TypeScriptContract + 1,
-        Properties = Translations + 1,
+        TypeScriptEnum = (long)8192 * 8192 * 16,
+        TypeScriptContract = (long)8192 * 8192 * 32,
+
+        Translations = (long)8192 * 8192 * 64,
+        Properties = (long)8192 * 8192 * 128,
 
         IndexRazorPageAll = IndexRazorPage + IndexRazorPageCode,
         DataGridAll = DataGridHandlerCode 
@@ -63,6 +66,7 @@ namespace CSharpCodeGenerator.Logic.Common
                     + DataGridColumnsComponentCode,
         FieldSetAll = FieldSetHandlerCode + FieldSetComponentRazor + FieldSetComponentCode
                     + FieldSetDetailComponentRazor + FieldSetDetailComponentCode,
+        EditFormAll = EditFormComponentRazor + EditFormComponentCode,
     }
 }
 //MdEnd

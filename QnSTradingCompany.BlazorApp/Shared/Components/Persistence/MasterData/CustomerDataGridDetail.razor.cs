@@ -11,13 +11,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.MasterData
             get;
             set;
         }
+        public override string ForPrefix => "Customer";
         protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;
-        protected string TitleValue
-        {
-            get;
-            set;
-        }
-        = "Customer";
         private TModel parentModel;
         protected TModel ParentModel
         {

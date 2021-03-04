@@ -17,13 +17,13 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.Logic.Controllers.Persistence
 {
-    /// <inheritdoc cref="IControllerAccess{T}"/>
-    /// <summary>
-    /// This generic class implements the base properties and operations defined in the interface. 
-    /// </summary>
-    /// <typeparam name="E">The entity type of element in the controller.</typeparam>
-    /// <typeparam name="I">The interface type which implements the entity.</typeparam>
-    [Authorize]
+	/// <inheritdoc cref="IControllerAccess{T}"/>
+	/// <summary>
+	/// This generic class implements the base properties and operations defined in the interface. 
+	/// </summary>
+	/// <typeparam name="E">The entity type of element in the controller.</typeparam>
+	/// <typeparam name="I">The interface type which implements the entity.</typeparam>
+	[Authorize]
     internal abstract partial class GenericPersistenceController<I, E> : GenericController<I, E>
         where I : Contracts.IIdentifiable
         where E : Entities.IdentityEntity, I, Contracts.ICopyable<I>, new()
@@ -39,7 +39,7 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence
         public override bool IsTransient => false;
         public override int MaxPageSize => 500;
 
-        internal IQueryable<E> QueryableSet() => Context.QueryableSet<I, E>();
+        protected virtual IQueryable<E> QueryableSet() => Context.QueryableSet<I, E>();
 
         protected GenericPersistenceController(IContext context)
             : base(context)
@@ -57,6 +57,19 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence
         partial void Constructed();
 
         #region Async-Methods
+        internal virtual Task<E> ExecuteFirstOrDefaultAsync(Expression<Func<E, bool>> predicate)
+		{
+            return QueryableSet().FirstOrDefaultAsync(predicate);
+		}
+        internal virtual Task<E> ExecuteSingleOrDefaultAsync(Expression<Func<E, bool>> predicate)
+        {
+            return QueryableSet().SingleOrDefaultAsync(predicate);
+        }
+        internal virtual Task<E[]> ExecuteWhereAsync(Expression<Func<E, bool>> predicate)
+        {
+            return QueryableSet().Where(predicate).ToArrayAsync();
+        }
+
         public override async Task<int> CountAsync()
         {
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);

@@ -7,7 +7,7 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace CSharpCodeGenerator.ConApp
 {
-    internal class Program
+	internal class Program
     {
         private static string GetCurrentSolutionPath()
         {
@@ -73,7 +73,7 @@ namespace CSharpCodeGenerator.ConApp
             var solutionProperties = Logic.Factory.GetSolutionProperties(solutionName, contractsFilePath);
             var appGenerationUnits = Logic.Common.UnitType.AllApps;
 
-            //Logic.Generator.DeleteGeneratedCodeFiles(solutionPath);
+            Logic.Generator.DeleteGeneratedCodeFiles(solutionPath);
             //return;
             var generatedItems = Logic.Generator.Generate(solutionName, contractsFilePath, appGenerationUnits);
 

@@ -11,13 +11,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
             get;
             set;
         }
+        public override string ForPrefix => "Translation";
         protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;
-        protected string TitleValue
-        {
-            get;
-            set;
-        }
-        = "Translation";
         private TModel parentModel;
         protected TModel ParentModel
         {

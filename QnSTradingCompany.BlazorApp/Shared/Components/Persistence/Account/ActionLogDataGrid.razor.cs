@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Account
             get;
             set;
         }
+        public override string ForPrefix => "ActionLog";
     }
 }

@@ -1,7 +1,6 @@
 //@QnSCodeCopy
 //MdStart
 
-using CommonBase.Extensions;
 using QnSTradingCompany.BlazorApp.Models.Modules.Form;
 using System;
 using System.Reflection;
@@ -9,7 +8,7 @@ using TModel = QnSTradingCompany.BlazorApp.Models.ModelObject;
 
 namespace QnSTradingCompany.BlazorApp.Shared.Components
 {
-    public partial class DataGridColumnsComponent : DisplayComponent
+    public partial class DataGridColumnsComponent : DataGridCommonComponent
     {
         protected virtual Type GetModelType()
         {
@@ -27,33 +26,11 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         partial void BeforeGetModelType(ref Type modelType, ref bool handled);
         partial void AfterGetModelType(Type modelType);
 
-        protected override void InitDisplayProperties(DisplayPropertyContainer displayProperties)
+        public virtual GridModelColumn CreateGridModelColumn(Type modelType, PropertyInfo propertyInfo)
         {
-            base.InitDisplayProperties(displayProperties);
+            var displayProperty = GetOrCreateDisplayProperty(modelType, propertyInfo);
 
-            displayProperties.Add(new DisplayProperty("Id") { Visible = false, IsModelItem = false });
-            displayProperties.Add(new DisplayProperty("RowVersion") { Visible = false, IsModelItem = false });
-            displayProperties.Add(new DisplayProperty("HasError") { Visible = false, IsModelItem = false });
-            displayProperties.Add(new DisplayProperty("Errors") { Visible = false, IsModelItem = false });
-        }
-        public virtual GridModelColumn CreateGridModelColumn(Type modelType, PropertyInfo propertyInfo, DisplayProperty displayProperty)
-        {
             return new GridModelColumn(modelType, propertyInfo, displayProperty);
-        }
-        public static DisplayProperty CreateDefaultDisplayProperty(PropertyInfo propertyInfo)
-        {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
-
-            var result = new DisplayProperty(propertyInfo.Name);
-
-            if (propertyInfo.PropertyType.IsNumericType())
-                result.ListWidth = "60px";
-            else if (propertyInfo.PropertyType.IsEnum)
-            {
-                result.ListWidth = "125px";
-                result.ListFilterable = false;
-            }
-            return result;
         }
     }
 }

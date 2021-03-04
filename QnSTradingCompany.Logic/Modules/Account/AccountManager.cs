@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.Logic.Modules.Account
 {
-    internal static partial class AccountManager
+	internal static partial class AccountManager
     {
         static AccountManager()
         {
@@ -87,10 +87,9 @@ namespace QnSTradingCompany.Logic.Modules.Account
                         {
                             SessionToken = Authorization.SystemAuthorizationToken
                         };
-                        var identity = await identityCtrl.QueryableSet()
-                                                         .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                                && e.EnableJwtAuth == true
-                                                                                && e.Email.ToLower() == email.Value.ToString().ToLower())
+                        var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                                                       && e.EnableJwtAuth == true
+                                                                                       && e.Email.ToLower() == email.Value.ToString().ToLower())
                                                          .ConfigureAwait(false);
 
                         if (identity != null)
@@ -145,8 +144,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken
                 };
-                var session = await sessionCtrl.QueryableSet()
-                                               .FirstOrDefaultAsync(e => e.SessionToken.Equals(sessionToken))
+                var session = await sessionCtrl.ExecuteFirstOrDefaultAsync(e => e.SessionToken.Equals(sessionToken))
                                                .ConfigureAwait(false);
 
                 if (session != null
@@ -208,8 +206,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
             {
                 SessionToken = Authorization.SystemAuthorizationToken
             };
-            var identity = await identityCtrl.QueryableSet()
-                                             .FirstOrDefaultAsync(e => e.Id == login.IdentityId)
+            var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.Id == login.IdentityId)
                                              .ConfigureAwait(false);
 
             if (identity != null)
@@ -241,10 +238,9 @@ namespace QnSTradingCompany.Logic.Modules.Account
             {
                 SessionToken = sessionToken
             };
-            var identity = await identityCtrl.QueryableSet()
-                                             .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                    && e.AccessFailedCount < 4
-                                                                    && e.Email.ToLower() == email.ToLower())
+            var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                                           && e.AccessFailedCount < 4
+                                                                           && e.Email.ToLower() == email.ToLower())
                                              .ConfigureAwait(false);
 
             if (identity == null)
@@ -274,9 +270,8 @@ namespace QnSTradingCompany.Logic.Modules.Account
             {
                 SessionToken = sessionToken
             };
-            var identity = await identityCtrl.QueryableSet()
-                                             .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                    && e.Email.ToLower() == email.ToLower())
+            var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                                           && e.Email.ToLower() == email.ToLower())
                                              .ConfigureAwait(false);
 
             if (identity == null)
@@ -300,15 +295,13 @@ namespace QnSTradingCompany.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken
                 };
-                var session = await sessionCtrl.QueryableSet()
-                                               .SingleOrDefaultAsync(e => e.SessionToken.Equals(sessionToken))
+                var session = await sessionCtrl.ExecuteFirstOrDefaultAsync(e => e.SessionToken.Equals(sessionToken))
                                                .ConfigureAwait(false);
 
                 if (session != null && session.IsActive)
                 {
                     using var identityCtrl = new Controllers.Persistence.Account.IdentityController(sessionCtrl);
-                    var identity = await identityCtrl.QueryableSet()
-                                                     .FirstOrDefaultAsync(e => e.Id == session.IdentityId)
+                    var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.Id == session.IdentityId)
                                                      .ConfigureAwait(false);
 
                     if (identity != null)
@@ -344,12 +337,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken,
                 };
-                var identity = await identityCtrl.QueryableSet()
-                                                 .Include(e => e.IdentityXRoles)
-                                                 .ThenInclude(e => e.Role)
-                                                 .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                        && e.AccessFailedCount < 4
-                                                                        && e.Email.ToLower() == email.ToLower())
+                var identity = await identityCtrl.GetValidIdentityByEmail(email)
                                                  .ConfigureAwait(false);
 
                 if (identity != null
@@ -402,19 +390,17 @@ namespace QnSTradingCompany.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken,
                 };
-                var identity = await identityCtrl.QueryableSet()
-                                                 .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                        && e.AccessFailedCount < 4
-                                                                        && e.Email.ToLower() == email.ToLower())
+                var identity = await identityCtrl.ExecuteFirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                                               && e.AccessFailedCount < 4
+                                                                               && e.Email.ToLower() == email.ToLower())
                                                  .ConfigureAwait(false);
 
                 if (identity != null
                     && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
                 {
                     using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
-                    var session = await sessionCtrl.QueryableSet()
-                                                   .FirstOrDefaultAsync(e => e.LogoutTime == null
-                                                                          && e.IdentityId == identity.Id)
+                    var session = await sessionCtrl.ExecuteFirstOrDefaultAsync(e => e.LogoutTime == null
+                                                                                 && e.IdentityId == identity.Id)
                                                    .ConfigureAwait(false);
 
                     if (session != null
@@ -442,11 +428,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
 
             var result = new List<Role>();
             using var identityXRoleCtrl = new Controllers.Persistence.Account.IdentityXRoleController(controllerObject);
-            var roles = await identityXRoleCtrl.QueryableSet()
-                                               .Where(e => e.IdentityId == identityId)
-                                               .Include(e => e.Role)
-                                               .Select(e => e.Role)
-                                               .ToArrayAsync()
+            var roles = await identityXRoleCtrl.QueryIdentityRolesAsync(identityId)
                                                .ConfigureAwait(false);
 
             result.AddRange(roles);
@@ -468,10 +450,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
                             SessionToken = Authorization.SystemAuthorizationToken,
                         };
                         bool saveChanges = false;
-                        var dbSessions = await sessionCtrl.QueryableSet()
-                                                          .Where(e => e.LogoutTime.HasValue == false)
-                                                          .Include(e => e.Identity)
-                                                          .ToArrayAsync()
+                        var dbSessions = await sessionCtrl.QueryOpenLoginSessionsAsync()
                                                           .ConfigureAwait(false);
                         var uncheckSessions = LoginSessions.Where(i => dbSessions.Any() == false
                                                                     || dbSessions.Any(e => e.Id != i.Id));
@@ -516,8 +495,7 @@ namespace QnSTradingCompany.Logic.Modules.Account
                         }
                         foreach (var memItem in uncheckSessions)
                         {
-                            var dbItem = await sessionCtrl.QueryableSet()
-                                                          .FirstOrDefaultAsync(e => e.Id == memItem.Id)
+                            var dbItem = await sessionCtrl.ExecuteFirstOrDefaultAsync(e => e.Id == memItem.Id)
                                                           .ConfigureAwait(false);
 
                             if (dbItem != null)

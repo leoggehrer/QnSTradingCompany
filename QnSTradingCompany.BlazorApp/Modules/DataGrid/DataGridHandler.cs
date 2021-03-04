@@ -20,8 +20,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : ModelObject, TContract, new()
     {
-        public ModelPage ModelPage { get; protected set; }
-        public IAdapterAccess<TContract> AdapterAccess { get; protected set; }
+        public ModelPage ModelPage { get; init; }
+        public IAdapterAccess<TContract> AdapterAccess { get; init; }
 
         public virtual string ForPrefix => typeof(TModel).Name;
         public Func<string, string> Translate { get; init; }
@@ -31,14 +31,13 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         public Func<Task> ShowEditItemAsync { get; set; }
         public Func<Task> ShowConfirmDeleteAsync { get; set; }
 
-        public DataGridHandler(ModelPage modelPage, IAdapterAccess<TContract> adapterAccess)
+        public DataGridHandler(ModelPage modelPage)
         {
             Constructing();
             modelPage.CheckArgument(nameof(modelPage));
-            adapterAccess.CheckArgument(nameof(adapterAccess));
 
             ModelPage = modelPage;
-            AdapterAccess = adapterAccess;
+            AdapterAccess = ModelPage.ServiceAdapter.Create<TContract>();
             Translate = ModelPage.Translate;
             Constructed();
         }
@@ -258,7 +257,7 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
                     PrepareLoadDataArgs(args);
                     BeforeLoadDataHandler?.Invoke(this, args);
                     handled = await BeforeLoadDataAsync(args).ConfigureAwait(false);
-                    if (handled == false)
+                    if (handled == false && ModelPage.AuthorizationSession != null)
                     {
                         var pageIndex = args.Skip / args.Top;
                         var skip = pageIndex.GetValueOrDefault() * PageSize;

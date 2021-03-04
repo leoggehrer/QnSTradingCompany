@@ -1,11 +1,15 @@
 //@QnSCodeCopy
 //MdStart
+using CommonBase.Extensions;
+using CommonBase.Helpers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using QnSTradingCompany.BlazorApp.Models.Modules.Session;
 using QnSTradingCompany.BlazorApp.Modules.SessionStorage;
 using QnSTradingCompany.BlazorApp.Services.Modules.Authentication;
 using QnSTradingCompany.BlazorApp.Services.Modules.Configuration;
 using QnSTradingCompany.BlazorApp.Services.Modules.Language;
+using Radzen;
 using System;
 using System.Threading.Tasks;
 
@@ -14,15 +18,19 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
     public partial class CommonComponent : ComponentBase, IDisposable
     {
         [Inject]
-        protected IAccountService AccountService { get; private set; }
+        protected IAccountService AccountService { get; init; }
         [Inject]
-        protected ISettingService Settings { get; private set; }
+        public ISettingService Settings { get; init; }
         [Inject]
-        protected ITranslatorService Translator { get; private set; }
+        public ITranslatorService Translator { get; init; }
+        [Inject]
+        public NavigationManager NavigationManager { get; init; }
+        [Inject]
+        public NotificationService NotificationService { get; init; }
         [Inject]
         protected IProtectedBrowserStorage ProtectedBrowserStore { get; set; }
 
-        protected AuthorizationSession AuthorizationSession
+        public AuthorizationSession AuthorizationSession
         {
             get => AccountService.CurrentAuthorizationSession;
         }
@@ -36,37 +44,63 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         public virtual string TranslateFor(string key) => Translator.Translate($"{ForPrefix}.{key}");
         public virtual string TranslateFor(string key, string defaultValue) => Translator.Translate($"{ForPrefix}.{key}", defaultValue);
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            AccountService.AuthorizationChanged += AccountService_AuthorizationChanged;
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
-
             if (firstRender)
             {
+                NavigationManager.LocationChanged += HandleLocationChanged;
+                AccountService.AuthorizationChanged += HandleAuthorizationChanged;
                 AccountService.InitAuthorizationSession();
-                await BeforeFirstRenderAsync().ConfigureAwait(false);
+                await StartedFirstRenderAsync().ConfigureAwait(false);
+                await OnFirstRenderAsync().ConfigureAwait(false);
                 CanRender = true;
+                await FinishedFirstRenderAsync().ConfigureAwait(false);
                 await InvokeAsync(() => StateHasChanged()).ConfigureAwait(false);
-                await AfterFirstRenderAsync().ConfigureAwait(false);
             }
+            await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
         }
-        protected virtual Task BeforeFirstRenderAsync()
+        protected virtual Task StartedFirstRenderAsync() => Task.FromResult(0);
+        protected virtual Task OnFirstRenderAsync() => Task.FromResult(0);
+        protected virtual Task FinishedFirstRenderAsync() => Task.FromResult(0);
+
+        protected virtual void HandleLocationChanged(object sender, LocationChangedEventArgs e)
         {
-            return Task.FromResult(0);
         }
-        protected virtual Task AfterFirstRenderAsync()
+        protected virtual void HandleAuthorizationChanged(object sender, AuthorizationSession e)
         {
-            return Task.FromResult(0);
         }
 
-        protected virtual void AccountService_AuthorizationChanged(object sender, AuthorizationSession e)
+        public virtual void ReloadSetting()
         {
+            Settings.Reload();
+        }
+        public virtual void ReloadTranslator()
+        {
+            Translator.Reload();
+        }
+
+        public Task InvokePageAsync(Action action)
+        {
+            action.CheckArgument(nameof(action));
+
+            return InvokeAsync(() => action());
+        }
+
+        protected static string GetExceptionError(Exception source)
+        {
+            source.CheckArgument(nameof(source));
+
+            string tab = string.Empty;
+            string errMsg = source.Message;
+            Exception innerException = source.InnerException;
+
+            while (innerException != null)
+            {
+                tab += "\t";
+                errMsg = $"{errMsg}{Environment.NewLine}{tab}{innerException.Message}";
+                innerException = innerException.InnerException;
+            }
+            return errMsg;
         }
 
         #region IDisposable Support
@@ -79,7 +113,9 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    AccountService.AuthorizationChanged -= AccountService_AuthorizationChanged;
+                    NavigationManager.LocationChanged -= HandleLocationChanged;
+                    AccountService.AuthorizationChanged -= HandleAuthorizationChanged;
+                    DisposeHelper.DisposeMembers(this);
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Radzen.Blazor;
 using QnSTradingCompany.BlazorApp.Shared.Components.Persistence.MasterData;
 using TContract = QnSTradingCompany.Contracts.Persistence.MasterData.ICustomer;
 using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.MasterData.Customer;
@@ -26,20 +25,11 @@ namespace QnSTradingCompany.BlazorApp.Pages.Persistence.MasterData
             get;
             private set;
         }
-        protected override Task BeforeFirstRenderAsync()
+        protected override Task OnFirstRenderAsync()
         {
-            var handled = false;
-            BeforeFirstRender(ref handled);
-            if (handled == false)
-            {
-                AdapterAccess = ServiceAdapter.Create<TContract>();
-                DataGridHandler = new CustomerDataGridHandler(this, AdapterAccess);
-                DataGridHandler.PageSize = Settings.GetValueTyped<int>($"{PageName}.{nameof(DataGridHandler.PageSize)}", DataGridHandler.PageSize);
-            }
-            AfterFirstRender();
-            return base.BeforeFirstRenderAsync();
+            DataGridHandler = new CustomerDataGridHandler(this);
+            DataGridHandler.PageSize = Settings.GetValueTyped<int>($"{ComponentName}.{nameof(DataGridHandler.PageSize)}", DataGridHandler.PageSize);
+            return base.OnFirstRenderAsync();
         }
-        partial void BeforeFirstRender(ref bool handled);
-        partial void AfterFirstRender();
     }
 }

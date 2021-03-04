@@ -4,7 +4,7 @@
 @using TRole = QnSTradingCompany.BlazorApp.Models.Persistence.Account.Role;
 
 <RadzenCard Style="margin-bottom:20px">
-    <b>@TitleValue</b>
+    <b>@TranslateFor("Detail")</b>
 </RadzenCard>
 <RadzenTabs>
     <Tabs>
@@ -42,7 +42,7 @@
                 <HeaderTemplate>
                 </HeaderTemplate>
                 <ChildContent>
-                    <DisplayModelComponent ModelPage=@ModelPage ParentComponent=@this Model="@ParentModel" />
+                    <DisplayModelComponent ParentComponent=@this Model="@ParentModel" />
                 </ChildContent>
             </RadzenPanel>
         </RadzenTabsItem>

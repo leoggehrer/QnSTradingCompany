@@ -1088,7 +1088,18 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
             get;
             set;
         }
+        public System.DateTime CreatedOn
+        {
+            get;
+            set;
+        }
+        = DateTime.Now;
         public System.Int32 Count
+        {
+            get;
+            set;
+        }
+        public System.Decimal PriceNet
         {
             get;
             set;
@@ -1112,7 +1123,9 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
                 RowVersion = other.RowVersion;
                 ProductId = other.ProductId;
                 CustomerId = other.CustomerId;
+                CreatedOn = other.CreatedOn;
                 Count = other.Count;
+                PriceNet = other.PriceNet;
                 Discount = other.Discount;
             }
             AfterCopyProperties(other);
@@ -1133,11 +1146,11 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
             {
                 return false;
             }
-            return ProductId == other.ProductId && CustomerId == other.CustomerId && Count == other.Count && Discount == other.Discount;
+            return ProductId == other.ProductId && CustomerId == other.CustomerId && CreatedOn == other.CreatedOn && Count == other.Count && PriceNet == other.PriceNet && Discount == other.Discount;
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(ProductId, CustomerId, Count, Discount);
+            return HashCode.Combine(ProductId, CustomerId, CreatedOn, Count, PriceNet, Discount);
         }
         public static Persistence.App.Order Create()
         {
@@ -1229,7 +1242,12 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
             get;
             set;
         }
-        public System.String Value
+        public System.Double Quantity
+        {
+            get;
+            set;
+        }
+        public System.Double Value
         {
             get;
             set;
@@ -1254,6 +1272,7 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
                 ProductId = other.ProductId;
                 CustomerId = other.CustomerId;
                 ConditionType = other.ConditionType;
+                Quantity = other.Quantity;
                 Value = other.Value;
                 Note = other.Note;
             }
@@ -1275,11 +1294,11 @@ namespace QnSTradingCompany.Logic.Entities.Persistence.App
             {
                 return false;
             }
-            return ProductId == other.ProductId && CustomerId == other.CustomerId && ConditionType == other.ConditionType && IsEqualsWith(Value, other.Value) && IsEqualsWith(Note, other.Note);
+            return ProductId == other.ProductId && CustomerId == other.CustomerId && ConditionType == other.ConditionType && Quantity == other.Quantity && Value == other.Value && IsEqualsWith(Note, other.Note);
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(ProductId, CustomerId, ConditionType, Value, Note);
+            return HashCode.Combine(ProductId, CustomerId, ConditionType, Quantity, Value, Note);
         }
         public static Persistence.App.Condition Create()
         {

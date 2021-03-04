@@ -11,13 +11,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Account
             get;
             set;
         }
+        public override string ForPrefix => "ActionLog";
         protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;
-        protected string TitleValue
-        {
-            get;
-            set;
-        }
-        = "ActionLog";
         private TModel parentModel;
         protected TModel ParentModel
         {

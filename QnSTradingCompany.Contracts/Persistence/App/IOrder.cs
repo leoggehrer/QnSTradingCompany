@@ -1,4 +1,5 @@
 ﻿using CommonBase.Attributes;
+using System;
 
 namespace QnSTradingCompany.Contracts.Persistence.App
 {
@@ -7,7 +8,10 @@ namespace QnSTradingCompany.Contracts.Persistence.App
     {
         int ProductId { get; set; }
         int CustomerId { get; set; }
-        int Count { get; set; }
+        [ContractPropertyInfo(DefaultValue = "DateTime.Now")]
+        DateTime CreatedOn { get; }
+        int Count { get; }
+        decimal PriceNet { get; }
         decimal Discount { get; }
     }
 }

@@ -5,7 +5,7 @@ namespace QnSTradingCompany.Logic
     {
         public static Contracts.Client.IControllerAccess<I> Create<I>() where I : Contracts.IIdentifiable
         {
-            Contracts.Client.IControllerAccess<I> result = null;
+            Contracts.Client.IControllerAccess<I> result;
             if (typeof(I) == typeof(QnSTradingCompany.Contracts.Persistence.MasterData.ICustomer))
             {
                 result = new Controllers.Persistence.MasterData.CustomerController(CreateContext()) as Contracts.Client.IControllerAccess<I>;
@@ -50,11 +50,15 @@ namespace QnSTradingCompany.Logic
             {
                 result = new Controllers.Business.Account.IdentityUserController(CreateContext()) as Contracts.Client.IControllerAccess<I>;
             }
+            else
+            {
+                throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);
+            }
             return result;
         }
         public static Contracts.Client.IControllerAccess<I> Create<I>(object sharedController) where I : Contracts.IIdentifiable
         {
-            Contracts.Client.IControllerAccess<I> result = null;
+            Contracts.Client.IControllerAccess<I> result;
             if (typeof(I) == typeof(QnSTradingCompany.Contracts.Persistence.MasterData.ICustomer))
             {
                 result = new Controllers.Persistence.MasterData.CustomerController(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<I>;
@@ -99,11 +103,15 @@ namespace QnSTradingCompany.Logic
             {
                 result = new Controllers.Business.Account.IdentityUserController(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<I>;
             }
+            else
+            {
+                throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);
+            }
             return result;
         }
         public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable
         {
-            Contracts.Client.IControllerAccess<I> result = null;
+            Contracts.Client.IControllerAccess<I> result;
             if (typeof(I) == typeof(QnSTradingCompany.Contracts.Persistence.MasterData.ICustomer))
             {
                 result = new Controllers.Persistence.MasterData.CustomerController(CreateContext())
@@ -191,6 +199,10 @@ namespace QnSTradingCompany.Logic
                     SessionToken = sessionToken
                 }
                 as Contracts.Client.IControllerAccess<I>;
+            }
+            else
+            {
+                throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);
             }
             return result;
         }

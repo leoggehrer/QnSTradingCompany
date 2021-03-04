@@ -16,10 +16,11 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
             get;
             set;
         }
-        protected override Task AfterFirstRenderAsync()
+        public override string ForPrefix => "Translation";
+        protected override Task OnFirstRenderAsync()
         {
             DataGridHandler.ModelItems = DataGridHandler.ModelItems.Union(GetAllDisplayProperties().Where(e => e.ScaffoldItem && e.Visible && e.IsModelItem).Select(e => e.PropertyName)).Distinct().ToArray();
-            return base.AfterFirstRenderAsync();
+            return base.OnFirstRenderAsync();
         }
         protected override Type GetModelType()
         {

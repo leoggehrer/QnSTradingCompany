@@ -177,7 +177,6 @@ namespace QnSTradingCompany.Logic.DataContext.Db
             var conditionBuilder = modelBuilder.Entity<Entities.Persistence.App.Condition>();
             conditionBuilder.ToTable("Condition", "App").HasKey("Id");
             modelBuilder.Entity<Entities.Persistence.App.Condition>().Property(p => p.RowVersion).IsRowVersion();
-            conditionBuilder.Property(p => p.Value).IsRequired().HasMaxLength(64);
             conditionBuilder.Property(p => p.Note).HasMaxLength(1024);
             ConfigureEntityType(conditionBuilder);
             var orderBuilder = modelBuilder.Entity<Entities.Persistence.App.Order>();

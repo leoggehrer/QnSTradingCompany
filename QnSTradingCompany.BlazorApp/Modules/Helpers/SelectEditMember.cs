@@ -13,8 +13,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.Helpers
 {
     public class SelectEditMember<T> : EditModelMember where T : Contracts.IIdentifiable
     {
-        public SelectEditMember(ModelPage page, ModelObject model, PropertyInfo propertyInfo, Func<T, string> toText, Func<T, bool> selector)
-            : base(page, model, propertyInfo)
+        public SelectEditMember(ModelPage page, ModelObject model, PropertyInfo propertyInfo, DisplayProperty displayProperty, Func<T, string> toText, Func<T, bool> selector)
+            : base(page, model, propertyInfo, displayProperty)
         {
             SelectItems = new SelectItems<T>(page, toText, selector);
 
@@ -27,8 +27,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.Helpers
             }
             EditCtrlType = Common.ControlType.Select;
         }
-        public SelectEditMember(ModelPage page, ModelObject model, PropertyInfo propertyInfo, IEnumerable<T> items, Func<T, string> toText, Func<T, bool> selector)
-            : base(page, model, propertyInfo)
+        public SelectEditMember(ModelPage page, ModelObject model, PropertyInfo propertyInfo, DisplayProperty displayProperty, IEnumerable<T> items, Func<T, string> toText, Func<T, bool> selector)
+            : base(page, model, propertyInfo, displayProperty)
         {
             items.CheckArgument(nameof(items));
 

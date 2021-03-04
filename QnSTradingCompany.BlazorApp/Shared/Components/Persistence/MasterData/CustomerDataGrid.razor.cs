@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.MasterData
             get;
             set;
         }
+        public override string ForPrefix => "Customer";
     }
 }

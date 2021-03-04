@@ -2,6 +2,7 @@
 //MdStart
 
 using CommonBase.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,6 +11,13 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
     public partial class DisplayPropertyContainer : IEnumerable<KeyValuePair<string, DisplayProperty>>
     {
         private readonly Dictionary<string, DisplayProperty> displayProperties = new Dictionary<string, DisplayProperty>();
+        public DisplayProperty this[string originName]
+        {
+            get
+            {
+                return displayProperties[originName];
+            }
+        }
         public void Add(DisplayProperty displayProperty)
         {
             displayProperty.CheckArgument(nameof(displayProperty));
@@ -34,6 +42,10 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
         public bool TryGetValue(string key, out DisplayProperty displayProperty)
         {
             return displayProperties.TryGetValue(key, out displayProperty);
+        }
+        public void SetValue(string originName, Action<DisplayProperty> action)
+        {
+            action?.Invoke(this[originName]);
         }
 
         public bool ContainsKey(string key)

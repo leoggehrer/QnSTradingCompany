@@ -11,13 +11,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Data
             get;
             set;
         }
+        public override string ForPrefix => "BinaryData";
         protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;
-        protected string TitleValue
-        {
-            get;
-            set;
-        }
-        = "BinaryData";
         private TModel parentModel;
         protected TModel ParentModel
         {

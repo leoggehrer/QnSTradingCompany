@@ -875,7 +875,18 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.App
             get;
             set;
         }
+        public System.DateTime CreatedOn
+        {
+            get;
+            set;
+        }
+        = DateTime.Now;
         public System.Int32 Count
+        {
+            get;
+            set;
+        }
+        public System.Decimal PriceNet
         {
             get;
             set;
@@ -899,7 +910,9 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.App
                 RowVersion = other.RowVersion;
                 ProductId = other.ProductId;
                 CustomerId = other.CustomerId;
+                CreatedOn = other.CreatedOn;
                 Count = other.Count;
+                PriceNet = other.PriceNet;
                 Discount = other.Discount;
             }
             AfterCopyProperties(other);
@@ -978,9 +991,12 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.App
             get;
             set;
         }
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(64)]
-        public System.String Value
+        public System.Double Quantity
+        {
+            get;
+            set;
+        }
+        public System.Double Value
         {
             get;
             set;
@@ -1006,6 +1022,7 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.App
                 ProductId = other.ProductId;
                 CustomerId = other.CustomerId;
                 ConditionType = other.ConditionType;
+                Quantity = other.Quantity;
                 Value = other.Value;
                 Note = other.Note;
             }

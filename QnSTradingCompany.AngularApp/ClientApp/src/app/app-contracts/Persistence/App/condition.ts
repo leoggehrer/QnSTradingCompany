@@ -10,7 +10,8 @@ export interface Condition
     productId: number;
     customerId: number;
     conditionType: ConditionType;
-    value: string;
+    quantity: number;
+    value: number;
     note: string;
     product: Product;
     customer: Customer;

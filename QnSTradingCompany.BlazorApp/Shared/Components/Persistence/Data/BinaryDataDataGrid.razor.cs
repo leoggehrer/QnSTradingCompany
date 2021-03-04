@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Data
             get;
             set;
         }
+        public override string ForPrefix => "BinaryData";
     }
 }

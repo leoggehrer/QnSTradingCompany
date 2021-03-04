@@ -7,21 +7,6 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
 {
     public partial class DisplayProperty
     {
-        public DisplayProperty()
-            : this(string.Empty, string.Empty)
-        {
-        }
-        public DisplayProperty(string originName)
-          : this(originName, string.Empty)
-        {
-        }
-        public DisplayProperty(string originName, string mappingName)
-        {
-            OriginName = originName;
-            MappingName = mappingName;
-            ToDisplay = (m, v) => v?.ToString();
-            GetFooterText = n => string.Empty;
-        }
         public string OriginName { get; set; }
         public string MappingName { get; set; }
         public string PropertyName => string.IsNullOrEmpty(MappingName) ? OriginName : MappingName;
@@ -59,6 +44,22 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
         public int Order { get; set; } = 10_000;
         public Func<object, object, string> ToDisplay { get; set; }
         public Func<string, string> GetFooterText { get; set; }
+
+        public DisplayProperty()
+            : this(string.Empty, string.Empty)
+        {
+        }
+        public DisplayProperty(string originName)
+            : this(originName, string.Empty)
+        {
+        }
+        public DisplayProperty(string originName, string mappingName)
+        {
+            OriginName = originName;
+            MappingName = mappingName;
+            ToDisplay = (m, v) => v?.ToString();
+            GetFooterText = n => string.Empty;
+        }
 
         public override string ToString() => OriginName;
     }

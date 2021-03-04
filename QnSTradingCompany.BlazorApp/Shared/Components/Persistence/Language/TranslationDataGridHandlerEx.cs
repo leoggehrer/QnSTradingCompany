@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
 {
-    public partial class TranslationDataGridHandler
+	public partial class TranslationDataGridHandler
     {
         protected override Task<bool> BeforeLoadDataAsync(LoadDataArgs args)
         {

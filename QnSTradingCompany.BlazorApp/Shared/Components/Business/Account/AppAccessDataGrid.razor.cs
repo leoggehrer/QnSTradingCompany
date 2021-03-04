@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Business.Account
             get;
             set;
         }
+        public override string ForPrefix => "AppAccess";
     }
 }

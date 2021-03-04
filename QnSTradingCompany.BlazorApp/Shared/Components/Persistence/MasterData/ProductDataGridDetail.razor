@@ -4,13 +4,13 @@
 @using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.MasterData.Product;
 
 <RadzenCard Style="margin-bottom:20px">
-    <b>@TranslateFor(TitleValue)</b>
+    <b>@TranslateFor("TitleDetails")</b>
 </RadzenCard>
 <RadzenPanel>
     <HeaderTemplate>
     </HeaderTemplate>
     <ChildContent>
-        <DisplayModelComponent ModelPage=@ModelPage ParentComponent=@this Model="@ParentModel" />
+        <DisplayModelComponent ParentComponent=@this Model="@ParentModel" />
     </ChildContent>
 </RadzenPanel>
 

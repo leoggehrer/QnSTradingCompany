@@ -5,7 +5,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.App
 {
     public partial class OrderDataGridHandler : Modules.DataGrid.DataGridHandler<TContract, TModel>
     {
-        public OrderDataGridHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess) : base(modelPage, adapterAccess)
+        public OrderDataGridHandler(Pages.ModelPage modelPage) : base(modelPage)
         {
         }
     }

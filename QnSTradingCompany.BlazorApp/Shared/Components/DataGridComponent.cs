@@ -10,24 +10,28 @@ using System.Text.Json;
 
 namespace QnSTradingCompany.BlazorApp.Shared.Components
 {
-    public partial class DataGridComponent : DisplayComponent
+    public partial class DataGridComponent : DataGridCommonComponent
     {
         [Inject]
-        protected DialogService DialogService
-        {
-            get;
-            private set;
-        }
-        [Inject]
-        protected NotificationService NotificationService
-        {
-            get;
-            private set;
-        }
+        protected DialogService DialogService { get; init; }
 
-        protected override void BeforeInitialized()
+		protected override void InitDisplayProperties(DisplayPropertyContainer displayProperties)
+		{
+			base.InitDisplayProperties(displayProperties);
+
+            displayProperties.Add(new DisplayProperty("Id") { Readonly = true, Visible = false, IsModelItem = false, Order = 100, ListWidth = "100px" });
+            displayProperties.Add(new DisplayProperty("RowVersion") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty("HasError") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty("Errors") { ScaffoldItem = false });
+
+            displayProperties.Add(new DisplayProperty("OneItem") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty("OneModel") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty("ManyItems") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty("ManyModels") { ScaffoldItem = false });
+        }
+        protected override void OnInitialized()
         {
-            base.BeforeInitialized();
+            base.OnInitialized();
 
             var jsonValue = Settings.GetValue($"{ComponentName}.Setting", string.Empty);
 
@@ -37,7 +41,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             }
             else
             {
-                DataGridSetting = new DataGridSetting(true, true, true, true, true);
+                DataGridSetting = new DataGridSetting(true, false, true, false, true);
             }
 
             jsonValue = Settings.GetValue($"{ComponentName}.EditOptions", string.Empty);
@@ -69,21 +73,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                     Width = "800px",
                 };
             }
-        }
-        protected override void InitDisplayProperties(DisplayPropertyContainer displayProperties)
-        {
-            base.InitDisplayProperties(displayProperties);
-
-            displayProperties.Add(new DisplayProperty("Id") { Visible = false, IsModelItem = false });
-            displayProperties.Add(new DisplayProperty("RowVersion") { Visible = false, IsModelItem = false });
-
-            displayProperties.Add(new DisplayProperty("HasError") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("Errors") { ScaffoldItem = false });
-
-            displayProperties.Add(new DisplayProperty("OneItem") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("OneModel") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("ManyItems") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("ManyModels") { ScaffoldItem = false });
         }
 
         public DataGridSetting DataGridSetting { get; private set; }

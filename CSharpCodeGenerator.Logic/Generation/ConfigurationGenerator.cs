@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace CSharpCodeGenerator.Logic.Generation
 {
-	internal partial class ConfigurationGenerator : GeneratorObject, Contracts.IConfigurationGenerator
+    internal partial class ConfigurationGenerator : GeneratorObject, Contracts.IConfigurationGenerator
     {
         protected ConfigurationGenerator(SolutionProperties solutionProperties)
             : base(solutionProperties)
@@ -44,37 +44,44 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             result.Add($"AppName{separator}KeyLanguage{separator}Key{separator}ValueLanguage{separator}Value");
 
+            var key = string.Empty;
             var types = contractsProject.PersistenceTypes
                                         .Union(contractsProject.BusinessTypes)
                                         .Union(contractsProject.ModuleTypes)
                                         .Union(contractsProject.ShadowTypes);
+            var properties = types.SelectMany(t => t.GetAllPropertyInfos())
+                                  .GroupBy(p => p.Name)
+                                  .Select(g => g.FirstOrDefault());
 
-            foreach (var type in types)
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Cancel{separator}De{separator}Cancel");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Submit{separator}De{separator}Submit");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Confirm{separator}De{separator}Confirm");
+            foreach (var item in properties.OrderBy(p => p.Name))
+            {
+                key = $"{item.Name}";
+                translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}{separator}De{separator}{item.Name}");
+            }
+
+            key = "LoginMenu";
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Access-Authorization{separator}De{separator}Access-Authorization");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Identity-User{separator}De{separator}Identity-User");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Role-Management{separator}De{separator}Role-Management");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Change password{separator}De{separator}Change password");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Reset password{separator}De{separator}Reset password");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Translation{separator}De{separator}Translation");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Settings{separator}De{separator}Settings");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.Logout{separator}De{separator}Logout");
+
+            foreach (var type in types.OrderBy(t => t.Name))
             {
                 var entityName = CreateEntityNameFromInterface(type);
 
-                foreach (var pi in type.GetAllPropertyInfos())
-                {
-                    var key = $"{entityName}.{pi.Name}";
-                    var value = $"{pi.Name}";
-
-                    translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}{separator}De{separator}{value}");
-                }
-                foreach (var pi in type.GetAllPropertyInfos())
-                {
-                    var key = $"{entityName}FieldSet.{pi.Name}";
-                    var value = $"{pi.Name}";
-
-                    translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}{separator}De{separator}{value}");
-                }
-                foreach (var pi in type.GetAllPropertyInfos())
-                {
-                    var key = $"{entityName}DataGridColumns.{pi.Name}";
-                    var value = $"{pi.Name}";
-
-                    translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}{separator}De{separator}{value}");
-                }
+                key = $"{entityName}";
+                translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.TitelDetails{separator}De{separator}TitelDetails");
+                translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.TitleEditModel{separator}De{separator}TitleEditModel");
+                translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}{key}.TitleConfirmDelete{separator}De{separator}TitleConfirmDelete");
             }
+
             result.Source.AddRange(translations.Distinct());
             return result;
         }

@@ -11,13 +11,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Account
             get;
             set;
         }
+        public override string ForPrefix => "Identity";
         protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;
-        protected string TitleValue
-        {
-            get;
-            set;
-        }
-        = "Identity";
         private TModel parentModel;
         protected TModel ParentModel
         {

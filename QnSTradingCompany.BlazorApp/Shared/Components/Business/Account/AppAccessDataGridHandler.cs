@@ -5,7 +5,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Business.Account
 {
     public partial class AppAccessDataGridHandler : Modules.DataGrid.DataGridHandler<TContract, TModel>
     {
-        public AppAccessDataGridHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess) : base(modelPage, adapterAccess)
+        public AppAccessDataGridHandler(Pages.ModelPage modelPage) : base(modelPage)
         {
         }
     }

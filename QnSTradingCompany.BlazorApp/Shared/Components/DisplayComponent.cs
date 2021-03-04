@@ -2,7 +2,6 @@
 //MdStart
 
 using CommonBase.Extensions;
-using CommonBase.Helpers;
 using Microsoft.AspNetCore.Components;
 using QnSTradingCompany.BlazorApp.Models;
 using QnSTradingCompany.BlazorApp.Models.Modules.Form;
@@ -100,6 +99,8 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         private record DisplayItem(string FormatValue, bool ScaffoldItem, bool Readonly, bool Visible, bool DisplayVisible, bool EditVisible, bool ListSortable, bool ListFilterable, string ListWidth, int Order);
         public virtual DisplayProperty GetOrCreateDisplayProperty(Type modelType, PropertyInfo propertyInfo)
         {
+            modelType.CheckArgument(nameof(modelType));
+
             var result = GetDisplayProperty(propertyInfo);
 
             if (result == null)
@@ -174,7 +175,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             ParentComponent?.CreatedDisplayModelMember(modelMember);
             if (DisplayProperties.TryGetValue(modelMember.Name, out DisplayProperty dp))
             {
-                modelMember.IsVisible = dp.DisplayVisible;
+                modelMember.Visible = dp.DisplayVisible;
                 modelMember.Order = dp.Order;
             }
             CreatedDisplayModelMemberHandler?.Invoke(this, modelMember);
@@ -205,24 +206,12 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             ParentComponent?.CreatedEditModelMember(modelMember);
             if (DisplayProperties.TryGetValue(modelMember.Name, out DisplayProperty dp))
             {
-                modelMember.IsVisible = dp.EditVisible;
-                modelMember.ReadOnly = dp.Readonly;
+                modelMember.Visible = dp.EditVisible;
+                modelMember.Readonly = dp.Readonly;
                 modelMember.Order = dp.Order;
             }
             CreatedEditModelMemberHandler?.Invoke(this, modelMember);
         }
-
-        #region Dispose
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                DisposeHelper.DisposeMembers(this);
-            }
-        }
-        #endregion Dispose
     }
 }
 //MdEnd

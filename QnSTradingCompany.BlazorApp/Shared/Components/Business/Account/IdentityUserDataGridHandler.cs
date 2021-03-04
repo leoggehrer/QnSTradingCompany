@@ -5,7 +5,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Business.Account
 {
     public partial class IdentityUserDataGridHandler : Modules.DataGrid.DataGridHandler<TContract, TModel>
     {
-        public IdentityUserDataGridHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess) : base(modelPage, adapterAccess)
+        public IdentityUserDataGridHandler(Pages.ModelPage modelPage) : base(modelPage)
         {
         }
     }

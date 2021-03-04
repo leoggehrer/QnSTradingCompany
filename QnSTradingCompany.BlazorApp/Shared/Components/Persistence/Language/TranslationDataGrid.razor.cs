@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
             get;
             set;
         }
+        public override string ForPrefix => "Translation";
     }
 }

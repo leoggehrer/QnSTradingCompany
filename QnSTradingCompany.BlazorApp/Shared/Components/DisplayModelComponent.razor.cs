@@ -4,7 +4,6 @@
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Components;
 using QnSTradingCompany.BlazorApp.Models;
-using QnSTradingCompany.BlazorApp.Pages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,13 +13,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
 {
     public partial class DisplayModelComponent
     {
-        private ModelObject model;
-        private IEnumerable<TModelMember> modelMembers;
-
-        [Parameter]
-        public ModelPage ModelPage { get; set; }
-        [Parameter]
-        public DisplayComponent ParentComponent { get; set; }
         [Parameter]
         public ModelObject Model
         {
@@ -31,6 +23,9 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                 LoadContainer();
             }
         }
+
+        private ModelObject model;
+        private IEnumerable<TModelMember> modelMembers;
 
         public override string ForPrefix => Model != null ? Model.GetType().Name : base.ForPrefix;
         public IEnumerable<TModelMember> ModelMembers
@@ -51,12 +46,11 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
 
                     foreach (var item in Model.GetType().GetAllTypeProperties())
                     {
-                        var isScaffoldItem = ModelPage.IsScaffoldItem(item.Value.PropertyInfo) 
-                                             && ParentComponent.IsScaffoldItem(item.Value.PropertyInfo);
+                        var isScaffoldItem = ParentComponent.IsScaffoldItem(item.Value.PropertyInfo);
 
                         if (isScaffoldItem)
                         {
-                            var modelMember = CreateModelMember(ModelPage, ParentComponent, Model, item.Value.PropertyInfo);
+                            var modelMember = CreateModelMember(ParentComponent, Model, item.Value.PropertyInfo);
 
                             if (modelMember != null)
                             {
@@ -69,7 +63,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             }
             AfterLoadContainer();
         }
-        private TModelMember CreateModelMember(ModelPage modelPage, DisplayComponent displayComponent, ModelObject modelObject, PropertyInfo propertyInfo)
+        private TModelMember CreateModelMember(DisplayComponent displayComponent, ModelObject modelObject, PropertyInfo propertyInfo)
         {
             var createHandled = false;
             var modelMember = default(TModelMember);
@@ -77,20 +71,17 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             displayComponent?.CreateDisplayModelMember(modelObject, propertyInfo, ref modelMember, ref createHandled);
             if (createHandled == false)
             {
-                modelPage?.CreateDisplayModelMember(modelObject, propertyInfo, ref modelMember, ref createHandled);
-            }
-            if (createHandled == false)
-            {
                 CreateModelMember(Model, propertyInfo, ref modelMember, ref createHandled);
             }
             if (createHandled == false && propertyInfo.CanRead)
             {
-                modelMember = new TModelMember(modelPage, modelObject, propertyInfo);
+                var displayProperty = GetOrCreateDisplayProperty(modelObject.GetType(), propertyInfo);
+
+                modelMember = new TModelMember(modelObject, propertyInfo, displayProperty);
             }
             if (modelMember != null)
             {
                 displayComponent?.CreatedDisplayModelMember(modelMember);
-                modelPage?.CreatedDisplayModelMember(modelMember);
             }
             return modelMember;
         }

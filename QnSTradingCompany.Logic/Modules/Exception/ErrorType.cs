@@ -22,6 +22,8 @@ namespace QnSTradingCompany.Logic.Modules.Exception
         InvalidEntityInsert,
         InvalidEntityUpdate,
         InvalidEntityContent,
+
+        InvalidControllerType,
     }
 }
 //MdEnd

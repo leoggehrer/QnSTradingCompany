@@ -1,6 +1,7 @@
 //@QnSCodeCopy
 //MdStart
 using CommonBase.Extensions;
+using Microsoft.EntityFrameworkCore;
 using QnSTradingCompany.Logic.Entities.Persistence.Account;
 using QnSTradingCompany.Logic.Modules.Account;
 using QnSTradingCompany.Logic.Modules.Exception;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.Logic.Controllers.Persistence.Account
 {
-    partial class IdentityController
+	partial class IdentityController
     {
-        private void CheckInsertEntity(Identity entity)
+        private static void CheckInsertEntity(Identity entity)
         {
             if (AccountManager.CheckMailAddressSyntax(entity.Email) == false)
             {
@@ -21,7 +22,7 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.Account
                 throw new LogicException(ErrorType.InvalidPassword);
             }
         }
-        private void CheckUpdateEntity(Identity entity)
+        private static void CheckUpdateEntity(Identity entity)
         {
             if (AccountManager.CheckMailAddressSyntax(entity.Email) == false)
             {
@@ -40,10 +41,10 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.Account
         {
             CheckInsertEntity(entity);
 
-            var securePassword = AccountManager.CreatePasswordHash(entity.Password);
+            var (Hash, Salt) = AccountManager.CreatePasswordHash(entity.Password);
 
-            entity.PasswordHash = securePassword.Hash;
-            entity.PasswordSalt = securePassword.Salt;
+            entity.PasswordHash = Hash;
+            entity.PasswordSalt = Salt;
             entity.Guid = System.Guid.NewGuid().ToString();
 
             return base.BeforeInsertingAsync(entity);
@@ -53,13 +54,22 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.Account
             CheckUpdateEntity(entity);
             if (entity.Password.HasContent())
             {
-                var securePassword = AccountManager.CreatePasswordHash(entity.Password);
+                var (Hash, Salt) = AccountManager.CreatePasswordHash(entity.Password);
 
-                entity.PasswordHash = securePassword.Hash;
-                entity.PasswordSalt = securePassword.Salt;
+                entity.PasswordHash = Hash;
+                entity.PasswordSalt = Salt;
             }
             return base.BeforeUpdatingAsync(entity);
         }
+
+        public Task<Identity> GetValidIdentityByEmail(string email)
+		{
+            return QueryableSet().Include(e => e.IdentityXRoles)
+                                 .ThenInclude(e => e.Role)
+                                 .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                        && e.AccessFailedCount < 4
+                                                        && e.Email.ToLower() == email.ToLower());
+		}
     }
 }
 //MdEnd

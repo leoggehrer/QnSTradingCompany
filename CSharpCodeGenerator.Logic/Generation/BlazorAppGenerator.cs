@@ -108,7 +108,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 if (CanCreateIndexPage(type))
                 {
                     result.AddRange(CreateDataGridPage(type, StaticLiterals.BusinessLabel));
-                    result.AddRange(CreateDataGridComponent(type, StaticLiterals.BusinessLabel));
+                    result.AddRange(CreateDisplayComponent(type, StaticLiterals.BusinessLabel));
                 }
             }
             return result;
@@ -123,7 +123,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 if (CanCreateIndexPage(type))
                 {
                     result.AddRange(CreateDataGridPage(type, StaticLiterals.PersistenceLabel));
-                    result.AddRange(CreateDataGridComponent(type, StaticLiterals.PersistenceLabel));
+                    result.AddRange(CreateDisplayComponent(type, StaticLiterals.PersistenceLabel));
                 }
             }
             return result;
@@ -138,7 +138,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 if (CanCreateIndexPage(type))
                 {
                     result.AddRange(CreateDataGridPage(type, StaticLiterals.ShadowLabel));
-                    result.AddRange(CreateDataGridComponent(type, StaticLiterals.ShadowLabel));
+                    result.AddRange(CreateDisplayComponent(type, StaticLiterals.ShadowLabel));
                 }
             }
             return result;
@@ -188,7 +188,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.razor"))
+                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
                                             .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}"))
                                             );
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
@@ -254,7 +254,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("using System.Threading.Tasks;");
             result.Add("using Microsoft.AspNetCore.Components;");
             result.Add("using Radzen;");
-            result.Add("using Radzen.Blazor;");
             result.Add($"using {CreateComponentsNameSpace(type)};");
             result.Add($"using TContract = {type.FullName};");
             result.Add($"using TModel = {entityFullName};");
@@ -278,22 +277,13 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"protected {entityName}DataGridHandler DataGridHandler" + " { get; private set; }");
             result.Add("protected Contracts.Client.IAdapterAccess<TContract> AdapterAccess { get; private set; }");
 
-            result.Add("protected override Task BeforeFirstRenderAsync()");
+            result.Add("protected override Task OnFirstRenderAsync()");
             result.Add("{");
-            result.Add("var handled = false;");
-            result.Add("BeforeFirstRender(ref handled);");
-            result.Add("if (handled == false)");
-            result.Add("{");
-            result.Add("AdapterAccess = ServiceAdapter.Create<TContract>();");
-            result.Add($"DataGridHandler = new {entityName}DataGridHandler(this, AdapterAccess);");
-            result.Add("DataGridHandler.PageSize = Settings.GetValueTyped<int>($\"{PageName}.{nameof(DataGridHandler.PageSize)}\", DataGridHandler.PageSize);");
-            result.Add("}");
-            result.Add("AfterFirstRender();");
-            result.Add("return base.BeforeFirstRenderAsync();");
+            result.Add($"DataGridHandler = new {entityName}DataGridHandler(this);");
+            result.Add("DataGridHandler.PageSize = Settings.GetValueTyped<int>($\"{ComponentName}.{nameof(DataGridHandler.PageSize)}\", DataGridHandler.PageSize);");
+            result.Add("return base.OnFirstRenderAsync();");
             result.Add("}");
 
-            result.Add("partial void BeforeFirstRender(ref bool handled);");
-            result.Add("partial void AfterFirstRender();");
             result.Add("}");
             result.Add("}");
 
@@ -304,19 +294,19 @@ namespace CSharpCodeGenerator.Logic.Generation
         partial void StartCreateDataGridPageCode(Type type, List<string> lines);
         partial void FinishCreateDataGridPageCode(Type type, List<string> lines);
 
-        public IEnumerable<Contracts.IGeneratedItem> CreateDataGridComponent(Type type, string typeLabel)
+        public IEnumerable<Contracts.IGeneratedItem> CreateDisplayComponent(Type type, string typeLabel)
         {
             type.CheckArgument(nameof(type));
             typeLabel.CheckArgument(nameof(typeLabel));
 
             var result = new List<Contracts.IGeneratedItem>();
 
-            StartCreateDataGridComponent(type, typeLabel);
+            StartCreateDisplayComponent(type, typeLabel);
 
             result.Add(CreateDataGridHandlerCode(type));
             result.Add(CreateDataGridComponentRazor(type));
             result.Add(CreateDataGridComponentCode(type));
-            //            result.Add(CreateDataGridComponentCommonCode(type));
+            //result.Add(CreateDataGridComponentCommonCode(type));
 
             result.Add(CreateDataGridColumnsComponentRazor(type));
             result.Add(CreateDataGridColumnsComponentCode(type));
@@ -324,19 +314,103 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add(CreateDataGridDetailComponentRazor(type));
             result.Add(CreateDataGridDetailComponentCode(type));
 
-            result.Add(CreateFieldSetHandlerCode(type));
-            result.Add(CreateEditFieldSetComponentRazor(type));
-            result.Add(CreateEditFieldSetComponentCode(type));
+            //result.Add(CreateFieldSetHandlerCode(type));
+            //result.Add(CreateEditFieldSetComponentRazor(type));
+            //result.Add(CreateEditFieldSetComponentCode(type));
 
-            result.Add(CreateEditFieldSetDetailComponentRazor(type));
-            result.Add(CreateEditFieldSetDetailComponentCode(type));
+            //result.Add(CreateEditFieldSetDetailComponentRazor(type));
+            //result.Add(CreateEditFieldSetDetailComponentCode(type));
 
-            FinishCreateDataGridComponent(type, typeLabel);
+            result.Add(CreateEditFormComponentRazor(type));
+            result.Add(CreateEditFormComponentCode(type));
+
+            FinishCreateDisplayComponent(type, typeLabel);
             return result;
         }
-        partial void StartCreateDataGridComponent(Type type, string typeLabel);
-        partial void FinishCreateDataGridComponent(Type type, string typeLabel);
+        partial void StartCreateDisplayComponent(Type type, string typeLabel);
+        partial void FinishCreateDisplayComponent(Type type, string typeLabel);
 
+        #region Edit form component generation
+        private Contracts.IGeneratedItem CreateEditFormComponentRazor(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var subPath = CreateSubPathFromType(type);
+            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+            var entityName = CreateEntityNameFromInterface(type);
+            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+            var fileNameRazor = $"{entityName}EditForm{PageExtension}";
+            var filePathRazor = Path.Combine(projectSharedComponentsPath, subPath, fileNameRazor);
+            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.DataGridComponentRazor)
+            {
+                FullName = CreateEntityFullNameFromInterface(type),
+                FileExtension = PageExtension,
+            };
+            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazor);
+
+            StartCreateEditFormComponentRazor(type, result.Source);
+            result.Add($"@using TContract = {type.FullName};");
+            result.Add($"@using TModel = {entityFullName};");
+            result.Add("@inherits EditFormComponent<TContract, TModel>");
+            result.Add(string.Empty);
+
+            result.Add("@*EmbeddedBegin:File=_EditFormComponent.template:Label=DefaultPage*@");
+            result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
+
+            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
+            FinishCreateEditFormComponentRazor(type, result.Source);
+            return result;
+        }
+        partial void StartCreateEditFormComponentRazor(Type type, List<string> lines);
+        partial void FinishCreateEditFormComponentRazor(Type type, List<string> lines);
+
+        private Contracts.IGeneratedItem CreateEditFormComponentCode(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var subPath = CreateSubPathFromType(type);
+            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+            var entityName = CreateEntityNameFromInterface(type);
+            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+            var fileNameRazor = $"{entityName}EditForm{PageExtension}";
+            var fileNameRazorCode = $"{fileNameRazor}{CodeExtension}";
+            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.EditFormComponentCode)
+            {
+                FullName = CreateEntityFullNameFromInterface(type),
+                FileExtension = PageExtension,
+            };
+            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
+
+            StartCreateEditFormComponentCode(type, result.Source);
+            result.Add("using Microsoft.AspNetCore.Components;");
+            result.Add("using Radzen;");
+            result.Add("using System.Linq;");
+            result.Add("using System.Threading.Tasks;");
+            result.Add($"using TContract = {type.FullName};");
+            result.Add($"using TModel = {entityFullName};");
+
+            result.Add($"namespace {CreateComponentsNameSpace(type)}");
+            result.Add("{");
+            result.Add($"partial class {entityName}EditForm");
+            result.Add("{");
+
+            result.Add("@*EmbeddedBegin:File=_EditFormComponent.code:Label=DefaultPage*@");
+            result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
+
+            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
+
+            result.Add("}");
+            result.Add("}");
+
+            FinishCreateEditFormComponentCode(type, result.Source);
+            result.FormatCSharpCode();
+            return result;
+        }
+        partial void StartCreateEditFormComponentCode(Type type, List<string> lines);
+        partial void FinishCreateEditFormComponentCode(Type type, List<string> lines);
+        #endregion Edit form component generation
+
+        #region DataGrid component generation
         private Contracts.IGeneratedItem CreateDataGridHandlerCode(Type type)
         {
             type.CheckArgument(nameof(type));
@@ -363,8 +437,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"public partial class {entityName}DataGridHandler : Modules.DataGrid.DataGridHandler<TContract, TModel>");
             result.Add("{");
 
-            result.Add($"public {entityName}DataGridHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess)");
-            result.Add(" : base(modelPage, adapterAccess)");
+            result.Add($"public {entityName}DataGridHandler(Pages.ModelPage modelPage)");
+            result.Add(" : base(modelPage)");
             result.Add("{");
             result.Add("}");
 
@@ -405,13 +479,12 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.razor"))
+                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
                                             .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}"))
                                             .Select(l => l.Replace("<DataGridDetail ", $"<{entityName}DataGridDetail "))
                                             .Select(l => l.Replace("<DataGridColumns ", $"<{entityName}DataGridColumns "))
                                             .Select(l => l.Replace("<EditFieldSetDetail ", $"<{entityName}EditFieldSetDetail "))
                                             );
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
 
             FinishCreateDataGridComponentRazor(type, result.Source);
             return result;
@@ -452,6 +525,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("[Parameter]");
             result.Add($"public {entityName}DataGridHandler DataGridHandler" + " { get; set; }");
 
+            result.Add($"public override string ForPrefix => \"{entityName}\";");
             result.Add("}");
             result.Add("}");
 
@@ -489,9 +563,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.razor"))
+                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
                                             .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}")));
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
 
             FinishCreateDataGridDetailComponentRazor(type, result.Source);
             return result;
@@ -528,8 +601,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("[Parameter]");
             result.Add($"public {entityName}DataGridHandler MasterDataGridHandler" + " { get; set; }");
 
+            result.Add($"public override string ForPrefix => \"{entityName}\";");
             result.Add("protected Pages.ModelPage ModelPage => MasterDataGridHandler.ModelPage;");
-            result.Add("protected string TitleValue { get; set; }" + $" = \"{entityName}\";");
             result.Add("private TModel parentModel;");
             result.Add("protected TModel ParentModel");
             result.Add("{");
@@ -577,8 +650,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"@using TModel = {entityFullName};");
             result.Add(string.Empty);
 
-            //result.AddRange(BlazorUIGenerator.CreateGridColumns(type).Select(rb => rb.ToString()));
-
             result.Add("@*EmbeddedBegin:File=_DataGridColumnsComponent.template:Label=DefaultPage*@");
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
@@ -624,10 +695,12 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("[Parameter]");
             result.Add($"public {entityName}DataGridHandler DataGridHandler" + " { get; set; }");
 
-            result.Add("protected override Task AfterFirstRenderAsync()");
+            result.Add($"public override string ForPrefix => \"{entityName}\";");
+
+            result.Add("protected override Task OnFirstRenderAsync()");
             result.Add("{");
             result.Add("DataGridHandler.ModelItems = DataGridHandler.ModelItems.Union(GetAllDisplayProperties().Where(e => e.ScaffoldItem && e.Visible && e.IsModelItem).Select(e => e.PropertyName)).Distinct().ToArray();");
-            result.Add("return base.AfterFirstRenderAsync();");
+            result.Add("return base.OnFirstRenderAsync();");
             result.Add("}");
 
             result.Add("protected override Type GetModelType()");
@@ -654,7 +727,9 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
         partial void StartCreateDataGridColumnsComponentCode(Type type, List<string> lines);
         partial void FinishCreateDataGridColumnsComponentCode(Type type, List<string> lines);
+        #endregion DataGrid component generation
 
+        #region FieldSet component generation
         private Contracts.IGeneratedItem CreateFieldSetHandlerCode(Type type)
         {
             type.CheckArgument(nameof(type));
@@ -723,11 +798,10 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                               .Select(l => l.Replace("File=TModel", $"File=_{entityName}.razor"))
+                                               .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
                                                .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}"))
                                                .Select(l => l.Replace("<EditFieldSetDetail ", $"<{entityName}EditFieldSetDetail "))
                                                );
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
 
             FinishCreateEditFieldSetComponentRazor(type, result.Source);
             return result;
@@ -769,9 +843,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("[Inject]");
             result.Add($"protected DialogService DialogService" + " { get; private set; }");
 
-            result.Add("[Inject]");
-            result.Add($"protected NotificationService NotificationService" + " { get; private set; }");
-
             result.Add("}");
             result.Add("}");
 
@@ -810,9 +881,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
             result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.razor"))
+                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
                                             .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}")));
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p)));
 
             FinishCreateEditFieldSetDetailComponentRazor(type, result.Source);
             return result;
@@ -865,6 +935,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
         partial void StartCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
         partial void FinishCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
-    }
+		#endregion FieldSet component generation
+	}
 }
 //MdEnd

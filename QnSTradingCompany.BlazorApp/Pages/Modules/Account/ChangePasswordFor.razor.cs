@@ -1,5 +1,4 @@
 //@QnSCodeCopy
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Radzen;
 using System;
@@ -31,16 +30,12 @@ namespace QnSTradingCompany.BlazorApp.Pages.Modules.Account
             set => error = value;
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override Task OnFirstRenderAsync()
         {
-            await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
+            FormModel.UserName = AuthorizationSession?.Username;
+            FormModel.Email = AuthorizationSession?.Email;
 
-            if (firstRender)
-            {
-                FormModel.UserName = AuthorizationSession?.Username;
-                FormModel.Email = AuthorizationSession?.Email;
-                await InvokeAsync(() => StateHasChanged()).ConfigureAwait(false);
-            }
+            return base.OnFirstRenderAsync();
         }
 
         protected async Task OnSubmitAsync()

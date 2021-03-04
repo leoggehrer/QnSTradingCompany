@@ -58,13 +58,15 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
 
         private void InitDisplayPropertiesHandler(object sender, DisplayPropertyContainer e)
         {
-            if (e.TryGetValue(ItemRefIdName, out DisplayProperty dp))
+            if (e.ContainsKey(ItemRefIdName) == false)
             {
-                dp.ListVisible = false;
-            }
-            else
-            {
-                e.Add(new DisplayProperty(ItemRefIdName) { ListVisible = false });
+                e.Add(new DisplayProperty(ItemRefIdName) 
+                {
+                    Order = 1,
+                    ListVisible = false,
+                    DisplayVisible = false,
+                    EditVisible = true,
+                });
             }
         }
 
@@ -78,8 +80,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             {
                 foreach (var model in models)
                 {
-                    var refId = (int)property.GetValue(model);
-                    var refItem = Items.FirstOrDefault(i => i.Id == refId);
+                    var refId = (int?)property.GetValue(model);
+                    var refItem = Items.FirstOrDefault(i => i.Id == refId.GetValueOrDefault());
 
                     if (refItem != null)
                     {
@@ -95,8 +97,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
                 modelMember.ToDisplayValue = v =>
                 {
                     var result = string.Empty;
-                    var refId = (int)v;
-                    var refItem = Items.FirstOrDefault(i => i.Id == refId);
+                    var refId = (int?)v;
+                    var refItem = Items.FirstOrDefault(i => i.Id == refId.GetValueOrDefault());
 
                     if (refItem != null)
                     {
@@ -106,15 +108,15 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
                 };
             }
         }
-
         protected void CreateEditModelMemberHandler(object sender, EditModelMemberInfo memberInfo)
         {
             if (memberInfo.Property.Name.Equals(ItemRefIdName))
             {
-                var refId = (int)memberInfo.Property.GetValue(memberInfo.Model);
+                var refId = (int?)memberInfo.Property.GetValue(memberInfo.Model);
+                var displayProperty = DisplayComponent.GetOrCreateDisplayProperty(memberInfo.Model.GetType(), memberInfo.Property);
 
                 memberInfo.Created = true;
-                memberInfo.ModelMember = new SelectEditMember<TItem>(ModelPage, memberInfo.Model, memberInfo.Property, Items, a => ItemToText(a), a => a.Id == refId);
+                memberInfo.ModelMember = new SelectEditMember<TItem>(ModelPage, memberInfo.Model, memberInfo.Property, displayProperty, Items, a => ItemToText(a), a => a.Id == refId.GetValueOrDefault());
             }
         }
 

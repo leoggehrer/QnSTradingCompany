@@ -15,5 +15,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Configuratio
             get;
             set;
         }
+        public override string ForPrefix => "Setting";
     }
 }

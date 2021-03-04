@@ -3,7 +3,7 @@
 
 namespace QnSTradingCompany.BlazorApp.Shared.Components
 {
-    public partial class DataGridDetailComponent : DisplayComponent
+    public partial class DataGridDetailComponent : DataGridCommonComponent
     {
     }
 }

@@ -208,6 +208,13 @@ namespace CSharpCodeGenerator.ConApp
                 Console.WriteLine("Write BlazorApp-FieldSet...");
                 WriteGeneratedItem(solutionPath, writeItems);
             }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorApp && (e.ItemType & ItemType.EditFormAll) > 0);
+
+                Console.WriteLine("Write BlazorApp-EditForm...");
+                WriteGeneratedItem(solutionPath, writeItems);
+            }));
             #endregion BlazorApp
 
             #region AspMvc

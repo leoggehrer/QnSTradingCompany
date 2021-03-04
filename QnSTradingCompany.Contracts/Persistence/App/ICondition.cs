@@ -9,8 +9,8 @@ namespace QnSTradingCompany.Contracts.Persistence.App
         int ProductId { get; set; }
         int CustomerId { get; set; }
         ConditionType ConditionType { get; set; }
-        [ContractPropertyInfo(Required = true, MaxLength = 64)]
-        string Value { get; set; }
+        double Quantity { get; set; }
+        double Value { get; set; }
         [ContractPropertyInfo(MaxLength = 1024)]
         string Note { get; set; }
     }

@@ -8,7 +8,9 @@ export interface Order
     id: number;
     productId: number;
     customerId: number;
+    createdOn: Date;
     count: number;
+    priceNet: number;
     discount: number;
     product: Product;
     customer: Customer;

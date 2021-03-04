@@ -10,12 +10,17 @@ namespace QnSTradingCompany.BlazorApp.Pages.Persistence.Language
     partial class TranslationPage
     {
         private static readonly string CommandSaveUnstored = nameof(CommandSaveUnstored);
-        partial void BeforeFirstRender(ref bool handled) => MenuItems.Add(new Models.Modules.Menu.MenuItem()
+        protected override void OnInitialized()
         {
-            Text = TranslateFor("Save unstored items"),
-            Value = CommandSaveUnstored,
-            Icon = "save",
-        });
+            MenuItems.Add(new Models.Modules.Menu.MenuItem()
+            {
+                Text = TranslateFor("Save unstored items"),
+                Value = CommandSaveUnstored,
+                Icon = "save",
+            });
+            base.OnInitialized();
+        }
+
         public override async void OnMenuItemClick(MenuItemEventArgs args)
         {
             base.OnMenuItemClick(args);
