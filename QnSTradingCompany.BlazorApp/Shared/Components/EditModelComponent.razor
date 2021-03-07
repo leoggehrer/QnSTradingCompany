@@ -15,10 +15,10 @@
     @{
         foreach (var item in ModelMembers)
         {
-            EvaluateDisplayProperty(item.DisplayProperty);
-            Model.EvaluateDisplayProperty(item.DisplayProperty);
+            EvaluateDisplayProperty(item.Display);
+            Model.EvaluateDisplayProperty(item.Display);
 
-            if (item.DisplayProperty.ScaffoldItem && item.DisplayProperty.EditVisible)
+            if (item.ScaffoldItem && item.Visible)
             {
                 var validateType = (item.EditCtrlType & Modules.Common.ControlType.ValidateType) > 0;
                 var cssLabel = "form-label";

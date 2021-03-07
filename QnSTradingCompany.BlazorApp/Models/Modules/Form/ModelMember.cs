@@ -8,12 +8,18 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
 {
     public abstract partial class ModelMember : ModelProperty
     {
-        public DisplayProperty DisplayProperty { get; init; }
-        public ModelObject Model { get; init; }
+        private int order = -1;
 
-        public bool Visible { get; set; } = true;
+        public ModelObject Model { get; init; }
+        public DisplayProperty Display { get; init; }
+        public bool ScaffoldItem => Display.ScaffoldItem;
+
+        public int Order 
+        {
+            get => order < 0 ? Display.Order : order; 
+            set => order = value; 
+        }
         public virtual object Value => Property.GetValue(Model);
-        public int Order { get; set; } = 10_000;
 
         public ModelMember(ModelObject model, PropertyInfo propertyInfo, DisplayProperty displayProperty)
             : base(model?.GetType(), propertyInfo)
@@ -22,7 +28,7 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
             displayProperty.CheckArgument(nameof(displayProperty));
 
             Model = model;
-            DisplayProperty = displayProperty;
+            Display = displayProperty;
         }
     }
 }

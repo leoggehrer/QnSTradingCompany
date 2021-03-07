@@ -58,9 +58,9 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
 
         private void InitDisplayPropertiesHandler(object sender, DisplayPropertyContainer e)
         {
-            if (e.ContainsKey(ItemRefIdName) == false)
+            if (e.ContainsKey($"{typeof(TModel).Name}{ItemRefIdName}") == false)
             {
-                e.Add(new DisplayProperty(ItemRefIdName) 
+                e.Add(new DisplayProperty(typeof(TModel).Name, ItemRefIdName) 
                 {
                     Order = 1,
                     ListVisible = false,

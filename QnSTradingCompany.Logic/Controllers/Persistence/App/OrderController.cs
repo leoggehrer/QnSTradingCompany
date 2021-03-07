@@ -1,4 +1,7 @@
-﻿using QnSTradingCompany.Logic.Entities.Persistence.App;
+﻿using CommonBase.Extensions;
+using QnSTradingCompany.Contracts.Persistence.MasterData;
+using QnSTradingCompany.Logic.Entities.Persistence.App;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace QnSTradingCompany.Logic.Controllers.Persistence.App
@@ -9,16 +12,29 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
         {
             using var productCtrl = new MasterData.ProductController(this);
             using var conditionCtrl = new ConditionController(this);
+            var product = await productCtrl.GetByIdAsync(entity.ProductId).ConfigureAwait(false);
             var conditions = await conditionCtrl.GetOrderConditionsAsync(entity.ProductId, entity.CustomerId)
                                                 .ConfigureAwait(false);
-            var product = await productCtrl.GetByIdAsync(entity.ProductId).ConfigureAwait(false);
 
             entity.Discount = 0;
             entity.Count = entity.Count >= 0 ? entity.Count : 0;
             if (product != null)
             {
                 entity.PriceNet = entity.Count * product.Price;
+                entity.Discount = CalculateMaxCondition(entity, product, conditions);
             }
+
+            await base.BeforeInsertingUpdateingAsync(entity).ConfigureAwait(false);
+        }
+
+        public static decimal CalculateMaxCondition(Order entity, IProduct product, IEnumerable<Condition> conditions)
+        {
+            entity.CheckArgument(nameof(entity));
+            product.CheckArgument(nameof(product));
+            conditions.CheckArgument(nameof(conditions));
+
+            decimal result = 0;
+            decimal priceNet = entity.Count * product.Price;
 
             foreach (var item in conditions)
             {
@@ -27,10 +43,10 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
                     if (entity.Count >= item.Quantity)
                     {
                         decimal discount = item.Value;
-                    
-                        if (discount > entity.Discount)
+
+                        if (discount > result)
                         {
-                            entity.Discount = discount;
+                            result = discount;
                         }
                     }
                 }
@@ -38,40 +54,40 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
                 {
                     if (entity.Count >= item.Quantity)
                     {
-                        decimal discount = (entity.PriceNet * (decimal)item.Value / 100);
+                        decimal discount = (priceNet * (decimal)item.Value / 100);
 
-                        if (discount > entity.Discount)
+                        if (discount > result)
                         {
-                            entity.Discount = discount;
+                            result = discount;
                         }
                     }
                 }
                 else if (item.ConditionType == Contracts.Modules.Common.ConditionType.ValueDiscountAbsolute)
                 {
-                    if (entity.PriceNet >= (decimal)item.Quantity)
+                    if (priceNet >= (decimal)item.Quantity)
                     {
                         decimal discount = item.Value;
 
-                        if (discount > entity.Discount)
+                        if (discount > result)
                         {
-                            entity.Discount = discount;
+                            result = discount;
                         }
                     }
                 }
                 else if (item.ConditionType == Contracts.Modules.Common.ConditionType.ValueDiscountRelative)
                 {
-                    if (entity.PriceNet >= (decimal)item.Quantity)
+                    if (priceNet >= (decimal)item.Quantity)
                     {
-                        decimal discount = (entity.PriceNet * item.Value / 100);
+                        decimal discount = (priceNet * item.Value / 100);
 
-                        if (discount > entity.Discount)
+                        if (discount > result)
                         {
-                            entity.Discount = discount;
+                            result = discount;
                         }
                     }
                 }
             }
-            await base.BeforeInsertingUpdateingAsync(entity).ConfigureAwait(false);
+            return result;
         }
     }
 }

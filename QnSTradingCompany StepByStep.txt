@@ -1,0 +1,244 @@
+Definition of the enumerations
+Project-Location:   QnSTradingCompany.Contracts 
+Folder-Location:    Modules/Common
+
+    public enum ConditionType : int
+    {
+        PieceDiscountRelative,    // Rabatt ab einer bestimmten Stückzahl
+        PieceDiscountAbsolute,    // Abzug ab einer bestimmten Stückzahl
+        ValueDiscountRelative,    // Rabatt ab einem bestimmten Bestellwert
+        ValueDiscountAbsolute,    // Abzug ab einem bestimmten Bestellwert
+    }
+
+Definition of the interfaces
+Project-Location:   QnSTradingCompany.Contracts 
+Folder-Location:    Persistence/MasterData
+
+    [ContractInfo]
+    public interface ICustomer : IVersionable, ICopyable<ICustomer>
+    {
+        [ContractPropertyInfo(Required = true, IsUnique = true, MaxLength = 8)]
+        string Number { get; set; }
+        [ContractPropertyInfo(Required = true, MaxLength = 256)]
+        string Name { get; set; }
+    }
+
+    [ContractInfo]
+    public interface IProduct : IVersionable, ICopyable<IProduct>
+    {
+        [ContractPropertyInfo(Required = true, IsUnique = true, MaxLength = 8)]
+        string Number { get; set; }
+        [ContractPropertyInfo(Required = true, MaxLength = 256)]
+        string Name { get; set; }
+        decimal Price { get; set; }
+    }
+
+Project-Location:   QnSTradingCompany.Contracts 
+Folder-Location:    Persistence/App
+
+    [ContractInfo]
+    public interface ICondition : IVersionable, ICopyable<ICondition>
+    {
+        int ProductId { get; set; }
+        int CustomerId { get; set; }
+        ConditionType ConditionType { get; set; }
+        double Quantity { get; set; }
+        decimal Value { get; set; }
+        [ContractPropertyInfo(MaxLength = 1024)]
+        string Note { get; set; }
+    }
+
+    [ContractInfo]
+    public interface IOrder : IVersionable, ICopyable<IOrder>
+    {
+        int ProductId { get; set; }
+
+        int CustomerId { get; set; }
+        [ContractPropertyInfo(DefaultValue = "DateTime.Now")]
+        DateTime CreatedOn { get; }
+        int Count { get; }
+        decimal PriceNet { get; }
+        decimal Discount { get; }
+    }
+
+Extend the entities for link to other entities
+Project-Location:   QnSTradingCompany.BlazorApp 
+Folder-Location:    Models/Persistence/App
+Partial-File:       Condition
+
+    partial class Condition
+    {
+        public string ProductName { get; set; }
+        public string CustomerName { get; set; }
+    }
+
+Partial-File:       Order
+
+    partial class Order
+    {
+        public string ProductName { get; set; }
+        public string CustomerName { get; set; }
+    }
+
+Link the entities
+Project-Location:   QnSTradingCompany.BlazorApp 
+Folder-Location:    Shared/Components/Persistence/App
+Partial-File:       ConditionDataGrid + Ex
+
+    partial class ConditionDataGrid
+    {
+        protected override void InitDisplayProperties(DisplayPropertyContainer displayProperties)
+        {
+            base.InitDisplayProperties(displayProperties);
+
+            // These settings can also be made via the setting
+            displayProperties.Add(new DisplayProperty(nameof(TModel.ProductName)) { EditVisible = false });
+            displayProperties.Add(new DisplayProperty(nameof(TModel.CustomerName)) { EditVisible = false });
+        }
+        [DisposeField]
+        protected DataGridAssociationItem<TModel, IProduct> associationProduct;
+        [DisposeField]
+        protected DataGridAssociationItem<TModel, ICustomer> associationCustomer;
+
+        protected override void BeforeInitialized()
+        {
+            base.BeforeInitialized();
+
+            associationProduct = new DataGridAssociationItem<TModel, IProduct>(this, DataGridHandler, nameof(TModel.ProductId), i => i.Name, (m, i) => m.ProductName = i.Name);
+            associationCustomer = new DataGridAssociationItem<TModel, ICustomer>(this, DataGridHandler, nameof(TModel.CustomerId), i => i.Name, (m, i) => m.CustomerName = i.Name);
+        }
+    }
+
+
+partial-File:       OrderDataGrid + Ex
+
+    partial class OrderDataGrid
+    {
+        protected override void InitDisplayProperties(DisplayPropertyContainer displayProperties)
+        {
+            base.InitDisplayProperties(displayProperties);
+
+            // These settings can also be made via the setting
+            displayProperties.Add(new DisplayProperty(nameof(TModel.CreatedOn)) { Readonly = true });
+            displayProperties.Add(new DisplayProperty(nameof(TModel.PriceNet)) { Readonly = true });
+            displayProperties.Add(new DisplayProperty(nameof(TModel.Discount)) { Readonly = true });
+            displayProperties.Add(new DisplayProperty(nameof(TModel.ProductName)) { EditVisible = false });
+            displayProperties.Add(new DisplayProperty(nameof(TModel.CustomerName)) { EditVisible = false });
+        }
+        [DisposeField]
+        protected DataGridAssociationItem<TModel, IProduct> associationProduct;
+        [DisposeField]
+        protected DataGridAssociationItem<TModel, ICustomer> associationCustomer;
+
+        protected override void BeforeInitialized()
+        {
+            base.BeforeInitialized();
+
+            associationProduct = new DataGridAssociationItem<TModel, IProduct>(this, DataGridHandler, nameof(TModel.ProductId), i => i.Name, (m, i) => m.ProductName = i.Name);
+            associationCustomer = new DataGridAssociationItem<TModel, ICustomer>(this, DataGridHandler, nameof(TModel.CustomerId), i => i.Name, (m, i) => m.CustomerName = i.Name);
+        }
+    }
+
+Query definition for conditions
+Project-Location:   QnSTradingCompany.Logic 
+Folder-Location:    Controllers/Persistence/App
+Partial-File:       ConditionController
+
+    partial class ConditionController
+    {
+        public Task<Condition[]> GetOrderConditionsAsync(int productId, int customerId)
+        {
+            return QueryableSet().Where(c => c.ProductId == productId && c.CustomerId == customerId)
+                                 .Include(c => c.Product)
+                                 .Include(c => c.Customer)
+                                 .ToArrayAsync();
+        }
+    }
+
+Business logic for max condition calculation
+Project-Location:   QnSTradingCompany.Logic 
+Folder-Location:    Controllers/Persistence/App
+Partial-File:       OrderController
+
+        protected override async Task BeforeInsertingUpdateingAsync(Order entity)
+        {
+            using var productCtrl = new MasterData.ProductController(this);
+            using var conditionCtrl = new ConditionController(this);
+            var product = await productCtrl.GetByIdAsync(entity.ProductId).ConfigureAwait(false);
+            var conditions = await conditionCtrl.GetOrderConditionsAsync(entity.ProductId, entity.CustomerId)
+                                                .ConfigureAwait(false);
+
+            entity.Discount = 0;
+            entity.Count = entity.Count >= 0 ? entity.Count : 0;
+            if (product != null)
+            {
+                entity.PriceNet = entity.Count * product.Price;
+                entity.Discount = CalculateMaxCondition(entity, product, conditions);
+            }
+
+            await base.BeforeInsertingUpdateingAsync(entity).ConfigureAwait(false);
+        }
+
+        public static decimal CalculateMaxCondition(Order entity, IProduct product, IEnumerable<Condition> conditions)
+        {
+            entity.CheckArgument(nameof(entity));
+            product.CheckArgument(nameof(product));
+            conditions.CheckArgument(nameof(conditions));
+
+            decimal result = 0;
+            decimal priceNet = entity.Count * product.Price;
+
+            foreach (var item in conditions)
+            {
+                if (item.ConditionType == Contracts.Modules.Common.ConditionType.PieceDiscountAbsolute)
+                {
+                    if (entity.Count >= item.Quantity)
+                    {
+                        decimal discount = item.Value;
+
+                        if (discount > result)
+                        {
+                            result = discount;
+                        }
+                    }
+                }
+                else if (item.ConditionType == Contracts.Modules.Common.ConditionType.PieceDiscountRelative)
+                {
+                    if (entity.Count >= item.Quantity)
+                    {
+                        decimal discount = (priceNet * (decimal)item.Value / 100);
+
+                        if (discount > result)
+                        {
+                            result = discount;
+                        }
+                    }
+                }
+                else if (item.ConditionType == Contracts.Modules.Common.ConditionType.ValueDiscountAbsolute)
+                {
+                    if (priceNet >= (decimal)item.Quantity)
+                    {
+                        decimal discount = item.Value;
+
+                        if (discount > result)
+                        {
+                            result = discount;
+                        }
+                    }
+                }
+                else if (item.ConditionType == Contracts.Modules.Common.ConditionType.ValueDiscountRelative)
+                {
+                    if (priceNet >= (decimal)item.Quantity)
+                    {
+                        decimal discount = (priceNet * item.Value / 100);
+
+                        if (discount > result)
+                        {
+                            result = discount;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+    }

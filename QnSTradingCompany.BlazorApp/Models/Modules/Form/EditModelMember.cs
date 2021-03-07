@@ -14,7 +14,8 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
     public partial class EditModelMember : ModelMember
     {
         public CommonComponent CommonComponent { get; init; }
-        public bool Readonly { get; set; }
+        public bool Visible => Display.EditVisible;
+        public bool Readonly => Display.Readonly || Property.CanWrite == false;
         public string DefaultValue => PropertyAttribute != null ? PropertyAttribute.DefaultValue : string.Empty;
         public string HtmlCssClass { get; set; }
         public string HtmlAttributes { get; set; }
@@ -240,7 +241,6 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
             commonComponent.CheckArgument(nameof(commonComponent));
 
             CommonComponent = commonComponent;
-            Readonly = propertyInfo.CanWrite == false;
             if (propertyInfo.PropertyType.Equals(typeof(string)))
             {
                 if (MaxLength > 100)

@@ -104,12 +104,37 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         partial void BeforeGetDisplayProperty(string originName, ref DisplayProperty result, ref bool handled);
         partial void AfterGetDisplayProperty(string originName, DisplayProperty result);
 
+        public virtual DisplayProperty GetDisplayProperty(Type modelType, PropertyInfo propertyInfo)
+        {
+            modelType.CheckArgument(nameof(modelType));
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            var handled = false;
+            var result = default(DisplayProperty);
+            var modelName = modelType.Name;
+            var originName = propertyInfo.Name;
+
+            BeforeGetDisplayProperty(modelName, originName, ref result, ref handled);
+            if (handled == false)
+            {
+                result = ParentComponent?.GetDisplayProperty(modelType, propertyInfo);
+                if (result == default)
+                {
+                    DisplayProperties.TryGetValue($"{modelName}{originName}", out result);
+                }
+            }
+            AfterGetDisplayProperty(modelName, originName, result);
+            return result;
+        }
+        partial void BeforeGetDisplayProperty(string modelName, string originName, ref DisplayProperty result, ref bool handled);
+        partial void AfterGetDisplayProperty(string modelName, string originName, DisplayProperty result);
+
         private record DisplayItem(string FormatValue, bool ScaffoldItem, bool Readonly, bool Visible, bool DisplayVisible, bool EditVisible, bool ListSortable, bool ListFilterable, string ListWidth, int Order);
         public virtual DisplayProperty GetOrCreateDisplayProperty(Type modelType, PropertyInfo propertyInfo)
         {
             modelType.CheckArgument(nameof(modelType));
 
-            var result = GetDisplayProperty(propertyInfo);
+            var result = GetDisplayProperty(modelType, propertyInfo);
 
             if (result == null)
             {
@@ -123,7 +148,22 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                 }
                 else
                 {
-                    result = new DisplayProperty(propertyInfo.Name);
+                    result = GetDisplayProperty(propertyInfo);
+                    if (result == null)
+                    {
+                        jsonValue = Settings.GetValue($"{propertyInfo.Name}", string.Empty);
+
+                        if (jsonValue.HasContent())
+                        {
+                            result = JsonSerializer.Deserialize<DisplayProperty>(jsonValue);
+                            result.ModelName = modelType.Name;
+                            result.OriginName = propertyInfo.Name;
+                        }
+                        else
+                        {
+                            result = new DisplayProperty(modelType.Name, propertyInfo.Name);
+                        }
+                    }
                 }
             }
             return result;
@@ -180,13 +220,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         public virtual void CreatedDisplayModelMember(DisplayModelMember modelMember)
         {
             modelMember.CheckArgument(nameof(modelMember));
-
             ParentComponent?.CreatedDisplayModelMember(modelMember);
-            if (DisplayProperties.TryGetValue(modelMember.Name, out DisplayProperty dp))
-            {
-                modelMember.Visible = dp.DisplayVisible;
-                modelMember.Order = dp.Order;
-            }
             CreatedDisplayModelMemberHandler?.Invoke(this, modelMember);
         }
         public virtual void CreateEditModelMember(ModelObject model, PropertyInfo propertyInfo, ref EditModelMember modelMember, ref bool handled)
@@ -213,12 +247,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             modelMember.CheckArgument(nameof(modelMember));
 
             ParentComponent?.CreatedEditModelMember(modelMember);
-            if (DisplayProperties.TryGetValue(modelMember.Name, out DisplayProperty dp))
-            {
-                modelMember.Visible = dp.EditVisible;
-                modelMember.Readonly = dp.Readonly;
-                modelMember.Order = dp.Order;
-            }
             CreatedEditModelMemberHandler?.Invoke(this, modelMember);
         }
     }

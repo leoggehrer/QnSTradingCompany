@@ -3,9 +3,9 @@
 
 @foreach (var item in ModelMembers)
 {
-    EvaluateDisplayProperty(item.DisplayProperty);
+    EvaluateDisplayProperty(item.Display);
 
-    if (item.DisplayProperty.ScaffoldItem && item.DisplayProperty.DisplayVisible)
+    if (item.ScaffoldItem && item.Visible)
     {
         var displayValue = item.DisplayValue;
         var isTextArea = displayValue.Length > 100 || displayValue.Contains(Environment.NewLine);

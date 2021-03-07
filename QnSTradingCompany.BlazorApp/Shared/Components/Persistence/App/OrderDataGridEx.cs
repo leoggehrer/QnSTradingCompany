@@ -12,11 +12,11 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.App
         {
             base.InitDisplayProperties(displayProperties);
 
-            displayProperties.Add(new DisplayProperty(nameof(TModel.CreatedOn)) { Readonly = true });
-            displayProperties.Add(new DisplayProperty(nameof(TModel.PriceNet)) { Readonly = true });
-            displayProperties.Add(new DisplayProperty(nameof(TModel.Discount)) { Readonly = true });
-            displayProperties.Add(new DisplayProperty(nameof(TModel.ProductName)) { EditVisible = false });
-            displayProperties.Add(new DisplayProperty(nameof(TModel.CustomerName)) { EditVisible = false });
+            //displayProperties.Add(new DisplayProperty(nameof(TModel.CreatedOn)) { Readonly = true });
+            //displayProperties.Add(new DisplayProperty(nameof(TModel.PriceNet)) { Readonly = true });
+            //displayProperties.Add(new DisplayProperty(nameof(TModel.Discount)) { Readonly = true });
+            //displayProperties.Add(new DisplayProperty(nameof(TModel.ProductName)) { EditVisible = false });
+            //displayProperties.Add(new DisplayProperty(nameof(TModel.CustomerName)) { EditVisible = false });
         }
         [DisposeField]
         protected DataGridAssociationItem<TModel, IProduct> associationProduct;

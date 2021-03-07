@@ -2,45 +2,46 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}")="SolutionItems","SolutionItems","{65F328D9-9323-4047-A9F4-B4E3F38F33FF}"
-	ProjectSection(SolutionItems)=preProject
-.editorconfig=.editorconfig
-		Contracts.png=Contracts.png
-		Controllers.png=Controllers.png
-		Entities.png=Entities.png
-		FilterAndSortImplementation.txt=FilterAndSortImplementation.txt
-		HowCanQueryDataFromAStoredProcedure.txt=HowCanQueryDataFromAStoredProcedure.txt
-		Installation.md=Installation.md
-		Properties.csv=Properties.csv
-		README.md=README.md
-		Translations.csv=Translations.csv
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{65F328D9-9323-4047-A9F4-B4E3F38F33FF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Contracts.png = Contracts.png
+		Controllers.png = Controllers.png
+		Entities.png = Entities.png
+		FilterAndSortImplementation.txt = FilterAndSortImplementation.txt
+		HowCanQueryDataFromAStoredProcedure.txt = HowCanQueryDataFromAStoredProcedure.txt
+		Installation.md = Installation.md
+		Properties.csv = Properties.csv
+		QnSTradingCompany StepByStep.txt = QnSTradingCompany StepByStep.txt
+		README.md = README.md
+		Translations.csv = Translations.csv
 	EndProjectSection
 EndProject
-Project("{F5C4D2DA-948D-4960-829B-E24DF5155AA0}") = "CommonBase", "CommonBase\CommonBase.csproj", "{CE95F62E-FD32-4663-9F8B-D9F72DAF798C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonBase", "CommonBase\CommonBase.csproj", "{CE95F62E-FD32-4663-9F8B-D9F72DAF798C}"
 EndProject
-Project("{542E7208-EDA3-4C05-9E63-16DF81FE5F68}") = "QnSTradingCompany.ConApp", "QnSTradingCompany.ConApp\QnSTradingCompany.ConApp.csproj", "{7E20034A-0149-41C8-9289-CCC8FDD52A09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.ConApp", "QnSTradingCompany.ConApp\QnSTradingCompany.ConApp.csproj", "{7E20034A-0149-41C8-9289-CCC8FDD52A09}"
 EndProject
-Project("{8C1FB08D-5696-40C4-B761-C06786758810}") = "QnSTradingCompany.Contracts", "QnSTradingCompany.Contracts\QnSTradingCompany.Contracts.csproj", "{4B5C1528-D30F-425D-96DC-F377CF4D821A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.Contracts", "QnSTradingCompany.Contracts\QnSTradingCompany.Contracts.csproj", "{4B5C1528-D30F-425D-96DC-F377CF4D821A}"
 EndProject
-Project("{D5C38260-E2F9-4770-B9DE-2BE42BF3D3AC}") = "QnSTradingCompany.Logic", "QnSTradingCompany.Logic\QnSTradingCompany.Logic.csproj", "{F5929701-58CF-4A71-83B9-AAE5562E567B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.Logic", "QnSTradingCompany.Logic\QnSTradingCompany.Logic.csproj", "{F5929701-58CF-4A71-83B9-AAE5562E567B}"
 EndProject
-Project("{0EDDEB5C-96E9-4366-AE0E-8A7596D72812}") = "QnSTradingCompany.WebApi", "QnSTradingCompany.WebApi\QnSTradingCompany.WebApi.csproj", "{F222C902-9FCA-432C-B0D1-C07C7A85D458}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.WebApi", "QnSTradingCompany.WebApi\QnSTradingCompany.WebApi.csproj", "{F222C902-9FCA-432C-B0D1-C07C7A85D458}"
 EndProject
-Project("{A3057AC1-8134-463A-9D77-843070A2C933}") = "QnSTradingCompany.Transfer", "QnSTradingCompany.Transfer\QnSTradingCompany.Transfer.csproj", "{A469104D-F0FC-4C56-9047-A7D935C8D169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.Transfer", "QnSTradingCompany.Transfer\QnSTradingCompany.Transfer.csproj", "{A469104D-F0FC-4C56-9047-A7D935C8D169}"
 EndProject
-Project("{97EABC10-7D3A-44AD-8D63-A02CDC0E4175}") = "CSharpCodeGenerator.ConApp", "CSharpCodeGenerator.ConApp\CSharpCodeGenerator.ConApp.csproj", "{945605E7-63CA-406C-87E8-AC39FF082268}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpCodeGenerator.ConApp", "CSharpCodeGenerator.ConApp\CSharpCodeGenerator.ConApp.csproj", "{945605E7-63CA-406C-87E8-AC39FF082268}"
 EndProject
-Project("{97B701FF-708E-4582-B5D6-41EC455DF96C}") = "QnSTradingCompany.Adapters", "QnSTradingCompany.Adapters\QnSTradingCompany.Adapters.csproj", "{24916419-BA6F-471A-B148-8E880EB328C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.Adapters", "QnSTradingCompany.Adapters\QnSTradingCompany.Adapters.csproj", "{24916419-BA6F-471A-B148-8E880EB328C1}"
 EndProject
-Project("{BE9AD72C-66DA-409E-8C7E-F102CAA15340}") = "QnSTradingCompany.AspMvc", "QnSTradingCompany.AspMvc\QnSTradingCompany.AspMvc.csproj", "{29195269-861B-42E9-ADAE-11FB6708069E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.AspMvc", "QnSTradingCompany.AspMvc\QnSTradingCompany.AspMvc.csproj", "{29195269-861B-42E9-ADAE-11FB6708069E}"
 EndProject
-Project("{C4689EC9-EC2B-4515-BD28-A34C56A45D97}") = "QnSTradingCompany.BlazorApp", "QnSTradingCompany.BlazorApp\QnSTradingCompany.BlazorApp.csproj", "{B8F091F2-5A34-49B6-B869-B76910E583F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.BlazorApp", "QnSTradingCompany.BlazorApp\QnSTradingCompany.BlazorApp.csproj", "{B8F091F2-5A34-49B6-B869-B76910E583F8}"
 EndProject
-Project("{BB08E652-663A-41F8-80D4-75D1A658C635}") = "QnSTradingCompany.AngularApp", "QnSTradingCompany.AngularApp\QnSTradingCompany.AngularApp.csproj", "{E883E834-B8CF-4870-BE4C-DA5146EF727C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QnSTradingCompany.AngularApp", "QnSTradingCompany.AngularApp\QnSTradingCompany.AngularApp.csproj", "{E883E834-B8CF-4870-BE4C-DA5146EF727C}"
 EndProject
-Project("{5BBE1A20-4EB7-40FB-898E-39FDD10C3247}") = "CSharpCodeGenerator.Logic", "CSharpCodeGenerator.Logic\CSharpCodeGenerator.Logic.csproj", "{EDA802A4-B405-453C-8620-E8A6E48CF51A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpCodeGenerator.Logic", "CSharpCodeGenerator.Logic\CSharpCodeGenerator.Logic.csproj", "{EDA802A4-B405-453C-8620-E8A6E48CF51A}"
 EndProject
-Project("{49D41A1F-BD4C-486C-B56A-544C8EF02FA7}") = "ConfigurationImporter.ConApp", "ConfigurationImporter.ConApp\ConfigurationImporter.ConApp.csproj", "{DDFD8B06-15CA-4442-90A0-3397391ED286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationImporter.ConApp", "ConfigurationImporter.ConApp\ConfigurationImporter.ConApp.csproj", "{DDFD8B06-15CA-4442-90A0-3397391ED286}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
