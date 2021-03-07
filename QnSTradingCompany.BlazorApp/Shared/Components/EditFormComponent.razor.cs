@@ -11,21 +11,41 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : Models.ModelObject, TContract, new()
     {
+        private TModel editModel;
+
         [Inject]
         public IServiceAdapter ServiceAdapter { get; init; }
 
         [Parameter]
-		public TModel EditModel { get; set; }
-		public bool HasHeader { get; set; }
+        public TModel EditModel 
+        {
+            get => editModel;
+            set
+            {
+                editModel = value;
+                editModel?.BeforeDisplay();
+                editModel?.BeforeEdit();
+            }
+        }
+        public bool HasHeader { get; set; }
         public bool HasFooter { get; set; } = true;
 
-        public virtual async void SubmitEditAsync()
+        public EditFormComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
+        public virtual async void SubmitChangesAsync()
         {
             var handled = false;
 
-            BeforeSubmitEdit(EditModel, ref handled);
+            BeforeSubmitChanges(EditModel, ref handled);
             if (handled == false)
             {
+                EditModel?.BeforeSave();
                 try
                 {
                     using var ctrl = ServiceAdapter.Create<TContract>(AuthorizationSession.Token);
@@ -48,14 +68,16 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                     ShowException(EditModel.Id == 0 ? "Error create" : "Error update", ex);
                 }
             }
-            AfterSubmitEdit(EditModel);
+            EditModel?.AfterSave();
+            AfterSubmitChanges(EditModel);
             await InvokeAsync(() => StateHasChanged()).ConfigureAwait(false);
             await ParentComponent.InvokePageAsync(() => StateHasChanged()).ConfigureAwait(false);
         }
-        partial void BeforeSubmitEdit(TModel editModel, ref bool handled);
-        partial void AfterSubmitEdit(TModel editModel);
-        public async void CancelEditDialog()
+        partial void BeforeSubmitChanges(TModel editModel, ref bool handled);
+        partial void AfterSubmitChanges(TModel editModel);
+        public async void CancelChanges()
         {
+            EditModel?.CancelEdit();
             if (EditModel.Id == 0)
             {
                 EditModel = new TModel();
@@ -65,6 +87,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                 using var ctrl = ServiceAdapter.Create<TContract>(AuthorizationSession.Token);
                 var entity = await ctrl.GetByIdAsync(EditModel.Id).ConfigureAwait(false);
 
+                EditModel = new TModel();
                 EditModel.CopyProperties(entity);
             }
         }

@@ -3,127 +3,127 @@
 
 @if (ModelMember.EditCtrlType == Modules.Common.ControlType.TextBox)
 {
-    <InputText type="text" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" maxlength="@ModelMember.MaxLength" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputText type="text" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" maxlength="@ModelMember.MaxLength" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.TextArea)
 {
-    <InputTextArea id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" maxlength="@ModelMember.MaxLength" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputTextArea id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" maxlength="@ModelMember.MaxLength" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.Numeric)
 {
     if (ModelMember.Property.PropertyType.Equals(typeof(byte)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="short" @bind-Value="@ModelMember.EditShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="short" @bind-Value="@ModelMember.EditShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(char)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="char" @bind-Value="@ModelMember.EditCharValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="char" @bind-Value="@ModelMember.EditCharValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(sbyte)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="sbyte" @bind-Value="@ModelMember.EditSByteValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="sbyte" @bind-Value="@ModelMember.EditSByteValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(short)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="short" @bind-Value="@ModelMember.EditShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="short" @bind-Value="@ModelMember.EditShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(ushort)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="ushort" @bind-Value="@ModelMember.EditUShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="ushort" @bind-Value="@ModelMember.EditUShortValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(int)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="int" @bind-Value="@ModelMember.EditIntValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="int" @bind-Value="@ModelMember.EditIntValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(uint)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="uint" @bind-Value="@ModelMember.EditUIntValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="uint" @bind-Value="@ModelMember.EditUIntValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(long)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="long" @bind-Value="@ModelMember.EditLongValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="long" @bind-Value="@ModelMember.EditLongValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(ulong)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="ulong" @bind-Value="@ModelMember.EditULongValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="ulong" @bind-Value="@ModelMember.EditULongValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.FloatingPoint)
 {
     if (ModelMember.Property.PropertyType.Equals(typeof(float)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="float" @bind-Value="@ModelMember.EditFloatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="float" @bind-Value="@ModelMember.EditFloatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Required" placeholder="@HtmlInfo.Readonly" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(double)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="double" @bind-Value="@ModelMember.EditDoubleValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="double" @bind-Value="@ModelMember.EditDoubleValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(decimal)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="decimal" @bind-Value="@ModelMember.EditDecimalValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="decimal" @bind-Value="@ModelMember.EditDecimalValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.NumericNull)
 {
     if (ModelMember.Property.PropertyType.Equals(typeof(byte?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="short?" @bind-Value="@ModelMember.EditShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="short?" @bind-Value="@ModelMember.EditShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(char?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="char?" @bind-Value="@ModelMember.EditCharNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="char?" @bind-Value="@ModelMember.EditCharNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(sbyte?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="sbyte?" @bind-Value="@ModelMember.EditSByteNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="sbyte?" @bind-Value="@ModelMember.EditSByteNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(short?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="short?" @bind-Value="@ModelMember.EditShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="short?" @bind-Value="@ModelMember.EditShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(ushort?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="ushort?" @bind-Value="@ModelMember.EditUShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="ushort?" @bind-Value="@ModelMember.EditUShortNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(int?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="int?" @bind-Value="@ModelMember.EditIntNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="int?" @bind-Value="@ModelMember.EditIntNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(uint?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="uint?" @bind-Value="@ModelMember.EditUIntNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="uint?" @bind-Value="@ModelMember.EditUIntNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(long?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="long?" @bind-Value="@ModelMember.EditLongNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="long?" @bind-Value="@ModelMember.EditLongNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(ulong?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="ulong?" @bind-Value="@ModelMember.EditULongNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="ulong?" @bind-Value="@ModelMember.EditULongNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.FloatingPointNull)
 {
     if (ModelMember.Property.PropertyType.Equals(typeof(float?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="float?" @bind-Value="@ModelMember.EditFloatNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="float?" @bind-Value="@ModelMember.EditFloatNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(double?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="double?" @bind-Value="@ModelMember.EditDoubleNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="double?" @bind-Value="@ModelMember.EditDoubleNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
     else if (ModelMember.Property.PropertyType.Equals(typeof(decimal?)))
     {
-        <InputNumber id="@ModelMember.FullName" TValue="decimal?" @bind-Value="@ModelMember.EditDecimalNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+        <InputNumber id="@ModelMember.FullName" TValue="decimal?" @bind-Value="@ModelMember.EditDecimalNullValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
     }
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.CheckBox)
 {
-    <InputCheckbox id="@ModelMember.FullName" @bind-Value="@ModelMember.EditBoolValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputCheckbox id="@ModelMember.FullName" @bind-Value="@ModelMember.EditBoolValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.CheckBoxNull)
 {
-    <InputCheckbox id="@ModelMember.FullName" @bind-Value="@ModelMember.EditBoolValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputCheckbox id="@ModelMember.FullName" @bind-Value="@ModelMember.EditBoolValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.Select)
 {
@@ -136,21 +136,21 @@ else if (ModelMember.EditCtrlType == Modules.Common.ControlType.Select)
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.TimePicker)
 {
-    <input type="text" id="@ModelMember.FullName" @bind="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <input type="text" id="@ModelMember.FullName" @bind="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.TimePickerNull)
 {
-    <input type="text" id="@ModelMember.FullName" @bind="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <input type="text" id="@ModelMember.FullName" @bind="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.DatePicker)
 {
-    <InputDate TValue="DateTime" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditDateTimeValue" format-value="@ModelMember.FormatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputDate TValue="DateTime" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditDateTimeValue" format-value="@ModelMember.FormatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else if (ModelMember.EditCtrlType == Modules.Common.ControlType.DatePickerNull)
 {
-    <InputDate TValue="DateTime?" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditDateTimeNullValue" format-value="@ModelMember.FormatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputDate TValue="DateTime?" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditDateTimeNullValue" format-value="@ModelMember.FormatValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }
 else
 {
-    <InputText type="text" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AtrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
+    <InputText type="text" id="@ModelMember.FullName" @bind-Value="@ModelMember.EditStringValue" class="@HtmlInfo.CssClass" style="@HtmlInfo.AttrStyle" required="@HtmlInfo.Required" readonly="@HtmlInfo.Readonly" placeholder="@HtmlInfo.Placeholder" />
 }

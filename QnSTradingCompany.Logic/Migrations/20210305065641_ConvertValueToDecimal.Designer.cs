@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QnSTradingCompany.Logic.DataContext.Db;
 
 namespace QnSTradingCompany.Logic.Migrations
 {
     [DbContext(typeof(QnSTradingCompanyDbContext))]
-    partial class QnSTradingCompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210305065641_ConvertValueToDecimal")]
+    partial class ConvertValueToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

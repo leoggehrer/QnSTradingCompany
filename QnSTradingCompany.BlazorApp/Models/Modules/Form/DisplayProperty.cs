@@ -7,8 +7,10 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
 {
     public partial class DisplayProperty
     {
+        public string Key => $"{ModelName}{OriginName}";
+        public string ModelName { get; set; }
         public string OriginName { get; set; }
-        public string MappingName { get; set; }
+        public string MappingName { get; set; } = string.Empty;
         public string PropertyName => string.IsNullOrEmpty(MappingName) ? OriginName : MappingName;
 
         public bool ScaffoldItem { get; set; } = true;
@@ -50,13 +52,13 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
         {
         }
         public DisplayProperty(string originName)
-            : this(originName, string.Empty)
+            : this(string.Empty, originName)
         {
         }
-        public DisplayProperty(string originName, string mappingName)
+        public DisplayProperty(string modelName, string originName)
         {
+            ModelName = modelName;
             OriginName = originName;
-            MappingName = mappingName;
             ToDisplay = (m, v) => v?.ToString();
             GetFooterText = n => string.Empty;
         }

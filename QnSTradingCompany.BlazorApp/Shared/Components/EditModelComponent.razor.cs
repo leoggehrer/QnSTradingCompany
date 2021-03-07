@@ -14,7 +14,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
     public partial class EditModelComponent
     {
         [Parameter]
-        public ModelObject Model
+        public IdentityModel Model
         {
             get => model;
             set
@@ -24,47 +24,70 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             }
         }
 
-        private ModelObject model;
+        private IdentityModel model;
         private IEnumerable<TModelMember> modelMembers;
 
+        [Parameter]
+        public bool Cloneable { get; set; } = true;
         public override string ForPrefix => Model != null ? Model.GetType().Name : base.ForPrefix;
         public IEnumerable<TModelMember> ModelMembers
         {
             get => modelMembers ?? System.Array.Empty<TModelMember>();
             private set => modelMembers = value;
         }
-        private void LoadContainer()
+
+        public EditModelComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
+        protected virtual void LoadContainer()
         {
             bool handled = false;
+            IEnumerable<TModelMember> CreateModelMembers(ModelObject model)
+            {
+                var result = new List<TModelMember>();
+
+                foreach (var item in model.GetType().GetAllTypeProperties())
+                {
+                    var isScaffoldItem = ParentComponent.IsScaffoldItem(item.Value.PropertyInfo);
+
+                    if (isScaffoldItem)
+                    {
+                        var modelMember = CreateModelMember(ParentComponent, model, item.Value.PropertyInfo);
+
+                        if (modelMember != null)
+                        {
+                            result.Add(modelMember);
+                        }
+                    }
+                }
+                return result;
+            }
 
             BeforeLoadContainer(ref handled);
             if (handled == false)
             {
                 if (Model != null)
-
                 {
-                    var items = new List<TModelMember>();
+                    var items = new List<TModelMember>(CreateModelMembers(Model));
 
-                    foreach (var item in Model.GetType().GetAllTypeProperties())
+                    foreach (var subObject in Model.GetSubObjects())
                     {
-                        var isScaffoldItem = ParentComponent.IsScaffoldItem(item.Value.PropertyInfo);
-
-                        if (isScaffoldItem)
-                        {
-                            var modelMember = CreateModelMember(ParentComponent, Model, item.Value.PropertyInfo);
-
-                            if (modelMember != null)
-                            {
-                                items.Add(modelMember);
-                            }
-                        }
+                        items.AddRange(CreateModelMembers(subObject));
                     }
                     ModelMembers = items.OrderBy(e => e.Order);
                 }
             }
             AfterLoadContainer();
         }
-        private TModelMember CreateModelMember(DisplayComponent displayComponent, ModelObject modelObject, PropertyInfo propertyInfo)
+        partial void BeforeLoadContainer(ref bool handled);
+        partial void AfterLoadContainer();
+
+        protected virtual TModelMember CreateModelMember(DisplayComponent displayComponent, ModelObject modelObject, PropertyInfo propertyInfo)
         {
             var createHandled = false;
             var modelMember = default(TModelMember);
@@ -91,8 +114,6 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             return modelMember;
         }
         partial void CreateModelMember(object model, PropertyInfo propertyInfo, ref TModelMember modelMember, ref bool handled);
-        partial void BeforeLoadContainer(ref bool handled);
-        partial void AfterLoadContainer();
     }
 }
 //MdEnd

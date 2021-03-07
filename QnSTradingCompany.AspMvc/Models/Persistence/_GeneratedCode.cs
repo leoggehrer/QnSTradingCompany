@@ -980,7 +980,7 @@ namespace QnSTradingCompany.AspMvc.Models.Persistence.App
             get;
             set;
         }
-        public System.Double Value
+        public System.Decimal Value
         {
             get;
             set;

@@ -26,7 +26,7 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
                 {
                     if (entity.Count >= item.Quantity)
                     {
-                        decimal discount = (decimal)item.Value;
+                        decimal discount = item.Value;
                     
                         if (discount > entity.Discount)
                         {
@@ -50,7 +50,7 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
                 {
                     if (entity.PriceNet >= (decimal)item.Quantity)
                     {
-                        decimal discount = (decimal)item.Value;
+                        decimal discount = item.Value;
 
                         if (discount > entity.Discount)
                         {
@@ -62,7 +62,7 @@ namespace QnSTradingCompany.Logic.Controllers.Persistence.App
                 {
                     if (entity.PriceNet >= (decimal)item.Quantity)
                     {
-                        decimal discount = (entity.PriceNet * (decimal)item.Value / 100);
+                        decimal discount = (entity.PriceNet * item.Value / 100);
 
                         if (discount > entity.Discount)
                         {

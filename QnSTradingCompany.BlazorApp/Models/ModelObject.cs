@@ -1,6 +1,6 @@
 //@QnSCodeCopy
 //MdStart
-using CommonBase.Extensions;
+using QnSTradingCompany.BlazorApp.Models.Modules.Form;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,52 +10,53 @@ namespace QnSTradingCompany.BlazorApp.Models
 {
     public partial class ModelObject
     {
-        private readonly List<ModelError> errors = new List<ModelError>();
-
-        public IEnumerable<ModelError> Errors => errors;
-
-        public bool HasError => Errors.Any();
-        public void ClearErrors() => errors.Clear();
-
-        public bool ContainsError(string key)
+        private List<ModelObject> subObjects = null;
+        protected List<ModelObject> SubObjects
         {
-            key.CheckNotNullOrEmpty(nameof(key));
-
-            return errors.Find(e => e.Key.Equals(key)) != null;
-        }
-        public ModelError GetError(string key)
-        {
-            key.CheckNotNullOrEmpty(nameof(key));
-
-            return errors.Find(e => e.Key.Equals(key));
-        }
-        public void SetError(ModelError modelError)
-        {
-            modelError.CheckArgument(nameof(modelError));
-
-            var error = errors.Find(e => e.Key.Equals(modelError.Key));
-
-            if (error == null)
+            get
             {
-                errors.Add(modelError);
-            }
-            else
-            {
-                error.Message = modelError.Message;
+                if (subObjects == null)
+                {
+                    subObjects = new List<ModelObject>();
+                }
+                return subObjects;
             }
         }
-        public void RemoveError(string key)
+        public IEnumerable<ModelObject> GetSubObjects() => SubObjects;
+
+        public virtual void BeforeDisplay()
         {
-            key.CheckNotNullOrEmpty(nameof(key));
-
-            var error = errors.Find(e => e.Key.Equals(key));
-
-            if (error != null)
-            {
-                errors.Remove(error);
-            }
         }
 
+        public virtual void BeforeEdit()
+        {
+        }
+        public virtual void BeforeSave()
+        {
+        }
+        public virtual void AfterSave()
+        {
+        }
+        public virtual void CancelEdit()
+        {
+        }
+
+        public virtual void BeforeDelete()
+        {
+        }
+        public virtual void ConfirmedDelete()
+        {
+        }
+        public virtual void AfterDelete()
+        {
+        }
+        public virtual void CancelDelete()
+        {
+        }
+
+        public virtual void EvaluateDisplayProperty(DisplayProperty displayProperty)
+        {
+        }
         protected static bool IsEqualsWith(object obj1, object obj2)
         {
             bool result = false;

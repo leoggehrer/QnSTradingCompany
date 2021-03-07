@@ -33,6 +33,15 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             get => modelMembers ?? System.Array.Empty<TModelMember>();
             private set => modelMembers = value;
         }
+
+        public DisplayModelComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         private void LoadContainer()
         {
             bool handled = false;

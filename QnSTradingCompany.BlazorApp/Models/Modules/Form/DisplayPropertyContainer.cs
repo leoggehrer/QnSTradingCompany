@@ -11,27 +11,27 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
     public partial class DisplayPropertyContainer : IEnumerable<KeyValuePair<string, DisplayProperty>>
     {
         private readonly Dictionary<string, DisplayProperty> displayProperties = new Dictionary<string, DisplayProperty>();
-        public DisplayProperty this[string originName]
+        public DisplayProperty this[string key]
         {
             get
             {
-                return displayProperties[originName];
+                return displayProperties[key];
             }
         }
         public void Add(DisplayProperty displayProperty)
         {
             displayProperty.CheckArgument(nameof(displayProperty));
 
-            displayProperties.Add(displayProperty.OriginName, displayProperty);
+            displayProperties.Add(displayProperty.Key, displayProperty);
         }
         public void AddOrSet(DisplayProperty displayProperty)
         {
             displayProperty.CheckArgument(nameof(displayProperty));
-            displayProperty.OriginName.CheckNotNullOrEmpty(nameof(displayProperty.OriginName));
+            displayProperty.Key.CheckNotNullOrEmpty(nameof(displayProperty.Key));
 
-            if (displayProperties.ContainsKey(displayProperty.OriginName))
+            if (displayProperties.ContainsKey(displayProperty.Key))
             {
-                displayProperties[displayProperty.OriginName] = displayProperty;
+                displayProperties[displayProperty.Key] = displayProperty;
             }
             else
             {
@@ -43,9 +43,9 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
         {
             return displayProperties.TryGetValue(key, out displayProperty);
         }
-        public void SetValue(string originName, Action<DisplayProperty> action)
+        public void SetValue(string key, Action<DisplayProperty> action)
         {
-            action?.Invoke(this[originName]);
+            action?.Invoke(this[key]);
         }
 
         public bool ContainsKey(string key)

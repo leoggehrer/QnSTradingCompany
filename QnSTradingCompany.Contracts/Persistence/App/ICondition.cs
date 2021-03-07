@@ -10,7 +10,7 @@ namespace QnSTradingCompany.Contracts.Persistence.App
         int CustomerId { get; set; }
         ConditionType ConditionType { get; set; }
         double Quantity { get; set; }
-        double Value { get; set; }
+        decimal Value { get; set; }
         [ContractPropertyInfo(MaxLength = 1024)]
         string Note { get; set; }
     }

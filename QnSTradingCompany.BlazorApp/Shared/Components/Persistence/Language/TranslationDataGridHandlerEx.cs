@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
 {
-	public partial class TranslationDataGridHandler
+    public partial class TranslationDataGridHandler
     {
         protected override Task<bool> BeforeLoadDataAsync(LoadDataArgs args)
         {
@@ -32,17 +32,36 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Language
             }
             return await base.QueriedDataAsync(result.ToArray()).ConfigureAwait(false);
         }
-        protected override void AfterSubmitEdit(Translation item)
+        private bool hasInserted = false;
+        protected override void BeforeSubmitChanges(Translation item, ref bool handled)
         {
-            base.AfterSubmitEdit(item);
+            base.BeforeSubmitChanges(item, ref handled);
 
-            InvokePageAsync(() => ReloadDataAsync());
+            hasInserted = item.Id == 0;
         }
-        public override void CommitEditRow(Translation item)
+        protected override void AfterSubmitChanges(Translation item)
         {
-            base.CommitEditRow(item);
+            base.AfterSubmitChanges(item);
 
-            InvokePageAsync(() => ReloadDataAsync());
+            if (hasInserted)
+            {
+                InvokePageAsync(() => ReloadDataAsync());
+            }
+        }
+        protected override void BeforeCommitEditRow(Translation item, ref bool handled)
+        {
+            base.BeforeCommitEditRow(item, ref handled);
+
+            hasInserted = item.Id == 0;
+        }
+        protected override void AfterCommitEditRow(Translation item)
+        {
+            base.AfterCommitEditRow(item);
+
+            if (hasInserted)
+            {
+                InvokePageAsync(() => ReloadDataAsync());
+            }
         }
     }
 }

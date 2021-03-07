@@ -30,6 +30,14 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         public event EventHandler<DisplayProperty> EvaluateDisplayPropertyHandler;
         #endregion EventHandler
 
+        public DisplayComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         protected virtual void InitDisplayProperties(DisplayPropertyContainer displayProperties)
         {
         }
@@ -110,6 +118,7 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
                 if (jsonValue.HasContent())
                 {
                     result = JsonSerializer.Deserialize<DisplayProperty>(jsonValue);
+                    result.ModelName = modelType.Name;
                     result.OriginName = propertyInfo.Name;
                 }
                 else

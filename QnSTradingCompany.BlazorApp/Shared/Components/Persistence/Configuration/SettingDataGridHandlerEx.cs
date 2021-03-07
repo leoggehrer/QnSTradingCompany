@@ -32,17 +32,36 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components.Persistence.Configuratio
             }
             return await base.QueriedDataAsync(result.ToArray()).ConfigureAwait(false);
         }
-        protected override void AfterSubmitEdit(Setting item)
+        private bool hasInserted = false;
+        protected override void BeforeSubmitChanges(Setting item, ref bool handled)
         {
-            base.AfterSubmitEdit(item);
+            base.BeforeSubmitChanges(item, ref handled);
 
-            InvokePageAsync(() => ReloadDataAsync());
+            hasInserted = item.Id == 0;
         }
-        public override void CommitEditRow(Setting item)
+        protected override void AfterSubmitChanges(Setting item)
         {
-            base.CommitEditRow(item);
+            base.AfterSubmitChanges(item);
 
-            InvokePageAsync(() => ReloadDataAsync());
+            if (hasInserted)
+            {
+                InvokePageAsync(() => ReloadDataAsync());
+            }
+        }
+        protected override void BeforeCommitEditRow(Setting item, ref bool handled)
+        {
+            base.BeforeCommitEditRow(item, ref handled);
+
+            hasInserted = item.Id == 0;
+        }
+        protected override void AfterCommitEditRow(Setting item)
+        {
+            base.AfterCommitEditRow(item);
+
+            if (hasInserted)
+            {
+                InvokePageAsync(() => ReloadDataAsync());
+            }
         }
     }
 }

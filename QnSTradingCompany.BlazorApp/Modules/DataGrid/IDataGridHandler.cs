@@ -21,24 +21,18 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         bool AllowInlineEdit { get; set; }
         bool AllowPaging { get; set; }
         bool AllowSorting { get; set; }
+        bool HasRowDetail { get; set; }
+
         int Count { get; }
+        int PageSize { get; set; }
+        TModel[] Models { get; }
         TModel DeleteModel { get; }
         TModel EditModel { get; }
         TModel ExpandModel { get; }
-        string ForPrefix { get; }
-        int From { get; }
-        bool HasRowDetail { get; set; }
+        TModel SelectedModel { get; }
+
         string[] ModelItems { get; set; }
         ModelPage ModelPage { get; }
-        TModel[] Models { get; }
-        int PageSize { get; set; }
-        RadzenGrid<TModel> RadzenGrid { get; set; }
-        TModel SelectedModel { get; }
-        Func<Task> ShowConfirmDeleteAsync { get; set; }
-        Func<Task> ShowEditItemAsync { get; set; }
-        Action<NotificationMessage> ShowNotification { get; set; }
-        int To { get; }
-        Func<string, string> Translate { get; init; }
 
         event EventHandler<TModel> AfterCreateModelHandler;
         event EventHandler<TModel> AfterDeleteModelHandler;
@@ -57,30 +51,8 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         event EventHandler<TModel> BeforeUpdateModelHandler;
         event EventHandler<TModel[]> LoadModelDataHandler;
 
-        Task AddItemAsync();
-        void CancelEditDialog(DialogService dialogService);
-        void CancelDeleteDialog(DialogService dialogService);
-        void OnCloseDialog(dynamic result);
-        void CancelEditRow(TModel item);
-        void CommitEditRow(TModel item);
-        Task ConfirmDeleteItemAsync(DialogService dialogService);
-        Task DeleteModelAsync(TModel model);
-        Task DeleteRowAsync(TModel model);
-        Task EditRowAsync(TModel item);
-        Task InsertModelAsync(TModel model);
-        Task LoadDataAsync(LoadDataArgs args);
         Task ReloadDataAsync();
         void ReloadModel(TModel model);
-        void RowCollapse(TModel item);
-        Task RowDoubleClickAsync(TModel item);
-        void RowExpand(TModel item);
-        void RowRender(RowRenderEventArgs<TModel> args);
-        Task RowSelectedAsync(TModel item);
-        Task SubmitEditAsync(DialogService dialogService);
-        string TranslateFor(string key);
-        Task UpdateModelAsync(TModel model);
-        Task UpdateRowAsync(TModel item);
-        void ValueChanged(TModel item);
     }
 }
 //MdEnd

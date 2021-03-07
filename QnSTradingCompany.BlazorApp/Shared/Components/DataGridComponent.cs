@@ -3,6 +3,7 @@
 
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Components;
+using QnSTradingCompany.BlazorApp.Models;
 using QnSTradingCompany.BlazorApp.Models.Modules.Form;
 using QnSTradingCompany.BlazorApp.Modules.DataGrid;
 using Radzen;
@@ -19,10 +20,10 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
 		{
 			base.InitDisplayProperties(displayProperties);
 
-            displayProperties.Add(new DisplayProperty("Id") { Readonly = true, Visible = false, IsModelItem = false, Order = 100, ListWidth = "100px" });
-            displayProperties.Add(new DisplayProperty("RowVersion") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("HasError") { ScaffoldItem = false });
-            displayProperties.Add(new DisplayProperty("Errors") { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty(nameof(IdentityModel.Id)) { Readonly = true, Visible = false, IsModelItem = false, Order = 100, ListWidth = "100px" });
+            displayProperties.Add(new DisplayProperty(nameof(IdentityModel.Cloneable)) { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty(nameof(IdentityModel.CloneData)) { ScaffoldItem = false });
+            displayProperties.Add(new DisplayProperty(nameof(VersionModel.RowVersion)) { ScaffoldItem = false });
 
             displayProperties.Add(new DisplayProperty("OneItem") { ScaffoldItem = false });
             displayProperties.Add(new DisplayProperty("OneModel") { ScaffoldItem = false });
@@ -78,6 +79,15 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         public DataGridSetting DataGridSetting { get; private set; }
         public DialogOptions EditOptions { get; private set; }
         public DialogOptions DeleteOptions { get; private set; }
+
+        public DataGridComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
     }
 }
 //MdEnd

@@ -54,8 +54,9 @@ namespace CSharpCodeGenerator.Logic.Generation
                                   .Select(g => g.FirstOrDefault());
 
             translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Cancel{separator}De{separator}Cancel");
-            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Submit{separator}De{separator}Submit");
             translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Confirm{separator}De{separator}Confirm");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}Submit{separator}De{separator}Submit");
+            translations.Add($"{SolutionProperties.SolutionName}{separator}En{separator}SubmitClose{separator}De{separator}SubmitClose");
             foreach (var item in properties.OrderBy(p => p.Name))
             {
                 key = $"{item.Name}";
@@ -86,13 +87,15 @@ namespace CSharpCodeGenerator.Logic.Generation
             return result;
         }
         #region Record definitions
-        private record MenuItem(string Text,
+        private record MenuItem(string Type,
+                                string Text,
                                 string Value,
                                 string Path,
                                 string Icon,
                                 int Order);
 
-        private record DialogOptions(bool ShowTitle,
+        private record DialogOptions(string Type,
+                                     bool ShowTitle,
                                      bool ShowClose,
                                      string Left,
                                      string Top,
@@ -100,13 +103,15 @@ namespace CSharpCodeGenerator.Logic.Generation
                                      string Width,
                                      string Height);
 
-        private record DataGridSetting(bool HasDataGridProgress,
+        private record DataGridSetting(string Type,
+                                       bool HasDataGridProgress,
                                        bool HasEditDialogHeader,
                                        bool HasEditDialogFooter,
                                        bool HasDeleteDialogHeader,
                                        bool HasDeleteDialogFooter);
 
-        private record DisplaySetting(bool ScaffoldItem, 
+        private record DisplaySetting(string Type,
+                                      bool ScaffoldItem, 
                                       bool IsModelItem, 
                                       bool Readonly, 
                                       string FormatValue, 
@@ -128,7 +133,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 FullName = $"Properties",
                 FileExtension = ".csv",
             };
-            var menuItem = new MenuItem(Text: "Home",
+            var menuItem = new MenuItem(Type: nameof(MenuItem),
+                                        Text: "Home",
                                         Value: "home",
                                         Path: "/",
                                         Icon: "home",
@@ -160,14 +166,16 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (result.Any(e => e.StartsWith(categoryKey)) == false)
                 {
-                    var dialogOptions = new DialogOptions(ShowTitle: true,
+                    var dialogOptions = new DialogOptions(Type: nameof(DialogOptions),
+                                                          ShowTitle: true,
                                                           ShowClose: true,
                                                           Left: string.Empty,
                                                           Top: string.Empty,
                                                           Bottom: string.Empty,
                                                           Width: "800px",
                                                           Height: string.Empty);
-                    var dataGridItem = new DataGridSetting(HasDataGridProgress: true,
+                    var dataGridItem = new DataGridSetting(Type: nameof(DataGridSetting), 
+                                                           HasDataGridProgress: true,
                                                            HasEditDialogHeader: false,
                                                            HasEditDialogFooter: true,
                                                            HasDeleteDialogHeader: false,
@@ -185,7 +193,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                     if (result.Any(e => e.StartsWith(fullKey)) == false)
                     {
                         var propertyHelper = new Helpers.ContractPropertyHelper(pi);
-                        var displaySetting = new DisplaySetting(ScaffoldItem: true,
+                        var displaySetting = new DisplaySetting(Type: nameof(DisplaySetting), 
+                                                                ScaffoldItem: true,
                                                                 IsModelItem: false,
                                                                 Readonly: false,
                                                                 FormatValue: string.Empty,

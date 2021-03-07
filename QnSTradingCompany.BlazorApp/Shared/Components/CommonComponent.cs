@@ -63,6 +63,14 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         protected virtual Task OnFirstRenderAsync() => Task.FromResult(0);
         protected virtual Task FinishedFirstRenderAsync() => Task.FromResult(0);
 
+        public CommonComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         protected virtual void HandleLocationChanged(object sender, LocationChangedEventArgs e)
         {
         }

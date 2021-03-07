@@ -16,38 +16,10 @@ using System.Threading.Tasks;
 
 namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
 {
-	public partial class DataGridHandler<TContract, TModel> : ComponentHandler, IDataGridHandler<TModel> 
+    public partial class DataGridHandler<TContract, TModel> : ComponentHandler, IDataGridHandler<TModel> 
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : ModelObject, TContract, new()
     {
-        public ModelPage ModelPage { get; init; }
-        public IAdapterAccess<TContract> AdapterAccess { get; init; }
-
-        public virtual string ForPrefix => typeof(TModel).Name;
-        public Func<string, string> Translate { get; init; }
-        public string TranslateFor(string key) => Translate($"{ForPrefix}.{key}");
-
-        public Action<NotificationMessage> ShowNotification { get; set; }
-        public Func<Task> ShowEditItemAsync { get; set; }
-        public Func<Task> ShowConfirmDeleteAsync { get; set; }
-
-        public DataGridHandler(ModelPage modelPage)
-        {
-            Constructing();
-            modelPage.CheckArgument(nameof(modelPage));
-
-            ModelPage = modelPage;
-            AdapterAccess = ModelPage.ServiceAdapter.Create<TContract>();
-            Translate = ModelPage.Translate;
-            Constructed();
-        }
-        protected virtual void Constructing()
-        {
-        }
-        protected virtual void Constructed()
-        {
-        }
-
         #region EventHandler
         public event EventHandler<LoadDataArgs> BeforeLoadDataHandler;
 
@@ -76,6 +48,34 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         public event EventHandler<TModel> BeforeEditModelHandler;
         public event EventHandler<TModel> AfterEditModelHandler;
         #endregion EventHandler
+
+        public ModelPage ModelPage { get; init; }
+        public IAdapterAccess<TContract> AdapterAccess { get; init; }
+
+        public virtual string ForPrefix => typeof(TModel).Name;
+        public Func<string, string> Translate { get; init; }
+        public string TranslateFor(string key) => Translate($"{ForPrefix}.{key}");
+
+        public Action<NotificationMessage> ShowNotification { get; set; }
+        public Func<Task> ShowEditItemAsync { get; set; }
+        public Func<Task> ShowConfirmDeleteAsync { get; set; }
+
+        public DataGridHandler(ModelPage modelPage)
+        {
+            Constructing();
+            modelPage.CheckArgument(nameof(modelPage));
+
+            ModelPage = modelPage;
+            AdapterAccess = ModelPage.ServiceAdapter.Create<TContract>();
+            Translate = ModelPage.Translate;
+            Constructed();
+        }
+        protected virtual void Constructing()
+        {
+        }
+        protected virtual void Constructed()
+        {
+        }
 
         public bool AllowPaging { get; set; } = true;
         public bool AllowSorting { get; set; } = true;
@@ -158,22 +158,6 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
 
             var result = true;
 
-            foreach (var item in model.Errors)
-            {
-                result = false;
-                if (ShowNotification != null)
-                {
-                    var message = string.Format(Translate(item.Message), item.Parameters.Select(e => Translate(e.ToString())).ToArray());
-
-                    ShowNotification(new NotificationMessage()
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = Translate(item.Key),
-                        Detail = message,
-                        Duration = 4000
-                    });
-                }
-            }
             foreach (var item in ModelValidator.Validate(model))
             {
                 result = false;
@@ -514,6 +498,7 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
                         }
                     }
                     await AfterLoadDataAsync(args).ConfigureAwait(false);
+                    Models.ForeachAction(m => m.BeforeDisplay());
                 }
                 catch (System.Exception ex)
                 {
@@ -685,17 +670,46 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         }
         protected virtual void BeforeShowEditItem(TModel item)
         {
+            item.BeforeEdit();
         }
         protected virtual void AfterAddItem(TModel item)
         {
         }
 
-        public virtual async Task SubmitEditAsync(DialogService dialogService)
+        public virtual async Task SubmitChangesAsync(DialogService dialogService)
+        {
+            var handled = false;
+
+            BeforeSubmitChanges(EditModel, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    if (ValidateModel(EditModel))
+                    {
+                        if (EditModel.Id == 0)
+                        {
+                            await InsertModelAsync(EditModel).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await UpdateModelAsync(EditModel).ConfigureAwait(false);
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    ShowException(EditModel.Id == 0 ? "Error create" : "Error update", ex);
+                }
+            }
+            AfterSubmitChanges(EditModel);
+        }
+        public virtual async Task SubmitChangesCloseAsync(DialogService dialogService)
         {
             var saved = false;
             var handled = false;
 
-            BeforeSubmitEdit(EditModel, ref handled);
+            BeforeSubmitChanges(EditModel, ref handled);
             if (handled == false)
             {
                 try
@@ -719,19 +733,22 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
                     ShowException(EditModel.Id == 0 ? "Error create" : "Error update", ex);
                 }
             }
-            AfterSubmitEdit(EditModel);
+            AfterSubmitChanges(EditModel);
             EditModel = saved ? null : EditModel;
         }
-        protected virtual void BeforeSubmitEdit(TModel item, ref bool handled)
+        protected virtual void BeforeSubmitChanges(TModel item, ref bool handled)
         {
+            item?.BeforeSave();
         }
-        protected virtual void AfterSubmitEdit(TModel item)
+        protected virtual void AfterSubmitChanges(TModel item)
         {
+            item?.AfterSave();
         }
 
-        public void CancelEditDialog(DialogService dialogService)
+        public virtual void CancelChangesDialog(DialogService dialogService)
         {
             dialogService.Close();
+            EditModel?.CancelEdit();
             EditModel = null;
         }
 
@@ -760,20 +777,27 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         }
         protected virtual void BeforeConfirmDeleteItem(TModel item, ref bool handled)
         {
+            item?.ConfirmedDelete();
         }
         protected virtual void AfterConfirmDeleteItem(TModel item)
         {
+            item?.AfterDelete();
         }
 
         public void CancelDeleteDialog(DialogService dialogService)
         {
             dialogService.Close();
+            DeleteModel?.CancelDelete();
             DeleteModel = null;
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public void OnCloseDialog(dynamic result)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
+            EditModel?.CancelEdit();
             EditModel = null;
+            DeleteModel?.CancelDelete();
             DeleteModel = null;
         }
         #endregion Dialog operations
@@ -887,8 +911,12 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             }
             AfterEditRow(item);
         }
-        partial void BeforeEditRow(TModel item, ref bool handled);
-        partial void AfterEditRow(TModel item);
+        protected virtual void BeforeEditRow(TModel item, ref bool handled)
+        {
+        }
+        protected virtual void AfterEditRow(TModel item)
+        {
+        }
 
         public virtual async Task UpdateRowAsync(TModel item)
         {
@@ -916,8 +944,12 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             }
             AfterUpdateRow(item);
         }
-        partial void BeforeUpdateRow(TModel item, ref bool handled);
-        partial void AfterUpdateRow(TModel item);
+        protected virtual void BeforeUpdateRow(TModel item, ref bool handled)
+        {
+        }
+        protected virtual void AfterUpdateRow(TModel item)
+        {
+        }
 
         public virtual async Task DeleteRowAsync(TModel model)
         {
@@ -926,9 +958,9 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             BeforeDeleteRow(model, ref handeld);
             if (handeld == false)
             {
-
                 DeleteModel = new TModel();
                 DeleteModel.CopyFrom(model);
+                DeleteModel.BeforeDelete();
                 if (ShowConfirmDeleteAsync != null)
                 {
                     await ShowConfirmDeleteAsync().ConfigureAwait(false);
@@ -936,8 +968,12 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             }
             AfterDelteRow(model);
         }
-        partial void BeforeDeleteRow(TModel model, ref bool handled);
-        partial void AfterDelteRow(TModel model);
+        protected virtual void BeforeDeleteRow(TModel model, ref bool handled)
+        {
+        }
+        protected virtual void AfterDelteRow(TModel model)
+        {
+        }
 
         public virtual void CommitEditRow(TModel item)
         {
@@ -950,8 +986,12 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             }
             AfterCommitEditRow(item);
         }
-        partial void BeforeCommitEditRow(TModel item, ref bool handled);
-        partial void AfterCommitEditRow(TModel item);
+        protected virtual void BeforeCommitEditRow(TModel item, ref bool handled)
+        {
+        }
+        protected virtual void AfterCommitEditRow(TModel item)
+        {
+        }
 
         public virtual void CancelEditRow(TModel item)
         {
@@ -969,8 +1009,12 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             }
             AfterCancelEditRow(item);
         }
-        partial void BeforeCancelEditRow(TModel item, ref bool handled);
-        partial void AfterCancelEditRow(TModel item);
+        protected virtual void BeforeCancelEditRow(TModel item, ref bool handled)
+        {
+        }
+        protected virtual void AfterCancelEditRow(TModel item)
+        {
+        }
         #endregion DataGridColumns operations
 
         private void ShowException(string title, System.Exception exception)

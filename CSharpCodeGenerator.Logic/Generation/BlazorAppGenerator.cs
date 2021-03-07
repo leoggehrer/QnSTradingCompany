@@ -730,211 +730,211 @@ namespace CSharpCodeGenerator.Logic.Generation
         #endregion DataGrid component generation
 
         #region FieldSet component generation
-        private Contracts.IGeneratedItem CreateFieldSetHandlerCode(Type type)
-        {
-            type.CheckArgument(nameof(type));
+        //private Contracts.IGeneratedItem CreateFieldSetHandlerCode(Type type)
+        //{
+        //    type.CheckArgument(nameof(type));
 
-            var subPath = CreateSubPathFromType(type);
-            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
-            var entityName = CreateEntityNameFromInterface(type);
-            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
-            var fileNameRazorCode = $"{entityName}FieldSetHandler{CodeExtension}";
-            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetHandlerCode)
-            {
-                FullName = CreateEntityFullNameFromInterface(type),
-                FileExtension = PageExtension,
-            };
-            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
+        //    var subPath = CreateSubPathFromType(type);
+        //    var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+        //    var entityName = CreateEntityNameFromInterface(type);
+        //    var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+        //    var fileNameRazorCode = $"{entityName}FieldSetHandler{CodeExtension}";
+        //    var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetHandlerCode)
+        //    {
+        //        FullName = CreateEntityFullNameFromInterface(type),
+        //        FileExtension = PageExtension,
+        //    };
+        //    result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
 
-            StartCreateFieldSetHandlerCode(type, result.Source);
-            result.Add($"using TContract = {type.FullName};");
-            result.Add($"using TModel = {entityFullName};");
+        //    StartCreateFieldSetHandlerCode(type, result.Source);
+        //    result.Add($"using TContract = {type.FullName};");
+        //    result.Add($"using TModel = {entityFullName};");
 
-            result.Add($"namespace {CreateComponentsNameSpace(type)}");
-            result.Add("{");
+        //    result.Add($"namespace {CreateComponentsNameSpace(type)}");
+        //    result.Add("{");
 
-            result.Add($"public partial class {entityName}FieldSetHandler : FieldSetHandler<TContract, TModel>");
-            result.Add("{");
+        //    result.Add($"public partial class {entityName}FieldSetHandler : FieldSetHandler<TContract, TModel>");
+        //    result.Add("{");
 
-            result.Add($"public {entityName}FieldSetHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess)");
-            result.Add(" : base(modelPage, adapterAccess)");
-            result.Add("{");
-            result.Add("}");
+        //    result.Add($"public {entityName}FieldSetHandler(Pages.ModelPage modelPage, Contracts.Client.IAdapterAccess<TContract> adapterAccess)");
+        //    result.Add(" : base(modelPage, adapterAccess)");
+        //    result.Add("{");
+        //    result.Add("}");
 
-            result.Add("}");
-            result.Add("}");
+        //    result.Add("}");
+        //    result.Add("}");
 
-            FinishCreateFieldSetHandlerCode(type, result.Source);
-            result.FormatCSharpCode();
-            return result;
-        }
-        partial void StartCreateFieldSetHandlerCode(Type type, List<string> lines);
-        partial void FinishCreateFieldSetHandlerCode(Type type, List<string> lines);
+        //    FinishCreateFieldSetHandlerCode(type, result.Source);
+        //    result.FormatCSharpCode();
+        //    return result;
+        //}
+        //partial void StartCreateFieldSetHandlerCode(Type type, List<string> lines);
+        //partial void FinishCreateFieldSetHandlerCode(Type type, List<string> lines);
 
-        private Contracts.IGeneratedItem CreateEditFieldSetComponentRazor(Type type)
-        {
-            type.CheckArgument(nameof(type));
+        //private Contracts.IGeneratedItem CreateEditFieldSetComponentRazor(Type type)
+        //{
+        //    type.CheckArgument(nameof(type));
 
-            var subPath = CreateSubPathFromType(type);
-            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
-            var entityName = CreateEntityNameFromInterface(type);
-            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
-            var fileNameRazor = $"{entityName}EditFieldSet{PageExtension}";
-            var filePathRazor = Path.Combine(projectSharedComponentsPath, subPath, fileNameRazor);
-            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetComponentRazor)
-            {
-                FullName = CreateEntityFullNameFromInterface(type),
-                FileExtension = PageExtension,
-            };
-            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazor);
+        //    var subPath = CreateSubPathFromType(type);
+        //    var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+        //    var entityName = CreateEntityNameFromInterface(type);
+        //    var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+        //    var fileNameRazor = $"{entityName}EditFieldSet{PageExtension}";
+        //    var filePathRazor = Path.Combine(projectSharedComponentsPath, subPath, fileNameRazor);
+        //    var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetComponentRazor)
+        //    {
+        //        FullName = CreateEntityFullNameFromInterface(type),
+        //        FileExtension = PageExtension,
+        //    };
+        //    result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazor);
 
-            StartCreateEditFieldSetComponentRazor(type, result.Source);
-            result.Add("@inherits FieldSetComponent");
-            result.Add("@using Radzen;");
-            result.Add($"@using TModel = {entityFullName};");
-            result.Add(string.Empty);
+        //    StartCreateEditFieldSetComponentRazor(type, result.Source);
+        //    result.Add("@inherits FieldSetComponent");
+        //    result.Add("@using Radzen;");
+        //    result.Add($"@using TModel = {entityFullName};");
+        //    result.Add(string.Empty);
 
-            result.Add("@*EmbeddedBegin:File=_EditFieldSetComponent.template:Label=DefaultPage*@");
-            result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
+        //    result.Add("@*EmbeddedBegin:File=_EditFieldSetComponent.template:Label=DefaultPage*@");
+        //    result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                               .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
-                                               .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}"))
-                                               .Select(l => l.Replace("<EditFieldSetDetail ", $"<{entityName}EditFieldSetDetail "))
-                                               );
+        //    result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
+        //                                       .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
+        //                                       .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}"))
+        //                                       .Select(l => l.Replace("<EditFieldSetDetail ", $"<{entityName}EditFieldSetDetail "))
+        //                                       );
 
-            FinishCreateEditFieldSetComponentRazor(type, result.Source);
-            return result;
-        }
-        partial void StartCreateEditFieldSetComponentRazor(Type type, List<string> lines);
-        partial void FinishCreateEditFieldSetComponentRazor(Type type, List<string> lines);
+        //    FinishCreateEditFieldSetComponentRazor(type, result.Source);
+        //    return result;
+        //}
+        //partial void StartCreateEditFieldSetComponentRazor(Type type, List<string> lines);
+        //partial void FinishCreateEditFieldSetComponentRazor(Type type, List<string> lines);
 
-        private Contracts.IGeneratedItem CreateEditFieldSetComponentCode(Type type)
-        {
-            type.CheckArgument(nameof(type));
+        //private Contracts.IGeneratedItem CreateEditFieldSetComponentCode(Type type)
+        //{
+        //    type.CheckArgument(nameof(type));
 
-            var subPath = CreateSubPathFromType(type);
-            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
-            var entityName = CreateEntityNameFromInterface(type);
-            var fileNameRazor = $"{entityName}EditFieldSet{PageExtension}";
-            var fileNameRazorCode = $"{fileNameRazor}{CodeExtension}";
-            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetComponentCode)
-            {
-                FullName = CreateEntityFullNameFromInterface(type),
-                FileExtension = PageExtension,
-            };
-            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
+        //    var subPath = CreateSubPathFromType(type);
+        //    var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+        //    var entityName = CreateEntityNameFromInterface(type);
+        //    var fileNameRazor = $"{entityName}EditFieldSet{PageExtension}";
+        //    var fileNameRazorCode = $"{fileNameRazor}{CodeExtension}";
+        //    var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetComponentCode)
+        //    {
+        //        FullName = CreateEntityFullNameFromInterface(type),
+        //        FileExtension = PageExtension,
+        //    };
+        //    result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
 
-            StartCreateEditFieldSetComponentCode(type, result.Source);
-            result.Add("using Microsoft.AspNetCore.Components;");
-            result.Add("using Radzen;");
+        //    StartCreateEditFieldSetComponentCode(type, result.Source);
+        //    result.Add("using Microsoft.AspNetCore.Components;");
+        //    result.Add("using Radzen;");
 
-            result.Add($"namespace {CreateComponentsNameSpace(type)}");
-            result.Add("{");
-            result.Add($"partial class {entityName}EditFieldSet");
-            result.Add("{");
+        //    result.Add($"namespace {CreateComponentsNameSpace(type)}");
+        //    result.Add("{");
+        //    result.Add($"partial class {entityName}EditFieldSet");
+        //    result.Add("{");
 
-            result.Add("[Parameter]");
-            result.Add("public int Id" + " { get; set; }");
+        //    result.Add("[Parameter]");
+        //    result.Add("public int Id" + " { get; set; }");
 
-            result.Add("[Parameter]");
-            result.Add($"public {entityName}FieldSetHandler FieldSetHandler" + " { get; set; }");
+        //    result.Add("[Parameter]");
+        //    result.Add($"public {entityName}FieldSetHandler FieldSetHandler" + " { get; set; }");
 
-            result.Add("[Inject]");
-            result.Add($"protected DialogService DialogService" + " { get; private set; }");
+        //    result.Add("[Inject]");
+        //    result.Add($"protected DialogService DialogService" + " { get; private set; }");
 
-            result.Add("}");
-            result.Add("}");
+        //    result.Add("}");
+        //    result.Add("}");
 
-            FinishCreateEditFieldSetComponentCode(type, result.Source);
-            result.FormatCSharpCode();
-            return result;
-        }
-        partial void StartCreateEditFieldSetComponentCode(Type type, List<string> lines);
-        partial void FinishCreateEditFieldSetComponentCode(Type type, List<string> lines);
+        //    FinishCreateEditFieldSetComponentCode(type, result.Source);
+        //    result.FormatCSharpCode();
+        //    return result;
+        //}
+        //partial void StartCreateEditFieldSetComponentCode(Type type, List<string> lines);
+        //partial void FinishCreateEditFieldSetComponentCode(Type type, List<string> lines);
 
-        private Contracts.IGeneratedItem CreateEditFieldSetDetailComponentRazor(Type type)
-        {
-            type.CheckArgument(nameof(type));
+        //private Contracts.IGeneratedItem CreateEditFieldSetDetailComponentRazor(Type type)
+        //{
+        //    type.CheckArgument(nameof(type));
 
-            var subPath = CreateSubPathFromType(type);
-            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
-            var entityName = CreateEntityNameFromInterface(type);
-            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
-            var fileNameRazor = $"{entityName}EditFieldSetDetail{PageExtension}";
-            var filePathRazor = Path.Combine(projectSharedComponentsPath, subPath, fileNameRazor);
-            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetDetailComponentRazor)
-            {
-                FullName = CreateEntityFullNameFromInterface(type),
-                FileExtension = PageExtension,
-            };
-            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazor);
+        //    var subPath = CreateSubPathFromType(type);
+        //    var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+        //    var entityName = CreateEntityNameFromInterface(type);
+        //    var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+        //    var fileNameRazor = $"{entityName}EditFieldSetDetail{PageExtension}";
+        //    var filePathRazor = Path.Combine(projectSharedComponentsPath, subPath, fileNameRazor);
+        //    var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetDetailComponentRazor)
+        //    {
+        //        FullName = CreateEntityFullNameFromInterface(type),
+        //        FileExtension = PageExtension,
+        //    };
+        //    result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazor);
 
-            StartCreateEditFieldSetDetailComponentRazor(type, result.Source);
-            result.Add("@inherits FieldSetComponent");
-            result.Add("@using Radzen;");
-            result.Add($"@using TModel = {entityFullName};");
-            result.Add(string.Empty);
-            result.AddRange(BlazorUIGenerator.CreateAddFieldSet(type).Select(rb => rb.ToString()));
+        //    StartCreateEditFieldSetDetailComponentRazor(type, result.Source);
+        //    result.Add("@inherits FieldSetComponent");
+        //    result.Add("@using Radzen;");
+        //    result.Add($"@using TModel = {entityFullName};");
+        //    result.Add(string.Empty);
+        //    result.AddRange(BlazorUIGenerator.CreateAddFieldSet(type).Select(rb => rb.ToString()));
 
-            result.Add("@*EmbeddedBegin:File=_EditFieldSetDetailComponent.template:Label=DefaultPage*@");
-            result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
+        //    result.Add("@*EmbeddedBegin:File=_EditFieldSetDetailComponent.template:Label=DefaultPage*@");
+        //    result.Add("@*EmbeddedEnd:Label=DefaultPage*@");
 
-            result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
-                                            .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
-                                            .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}")));
+        //    result.AddRange(EmbeddedTagReplacer.ReplaceEmbeddedTags(result.Source.Eject(), TemplatesSubPath, "@*", "*@", (st, et, rt, p) => EmbeddedTagManager.Handle(type, st, et, rt, p))
+        //                                    .Select(l => l.Replace("File=TModel", $"File=_{entityName}.template"))
+        //                                    .Select(l => l.Replace("Type=TModel", $"Type={entityFullName}")));
 
-            FinishCreateEditFieldSetDetailComponentRazor(type, result.Source);
-            return result;
-        }
-        partial void StartCreateEditFieldSetDetailComponentRazor(Type type, List<string> lines);
-        partial void FinishCreateEditFieldSetDetailComponentRazor(Type type, List<string> lines);
+        //    FinishCreateEditFieldSetDetailComponentRazor(type, result.Source);
+        //    return result;
+        //}
+        //partial void StartCreateEditFieldSetDetailComponentRazor(Type type, List<string> lines);
+        //partial void FinishCreateEditFieldSetDetailComponentRazor(Type type, List<string> lines);
 
-        private Contracts.IGeneratedItem CreateEditFieldSetDetailComponentCode(Type type)
-        {
-            type.CheckArgument(nameof(type));
+        //private Contracts.IGeneratedItem CreateEditFieldSetDetailComponentCode(Type type)
+        //{
+        //    type.CheckArgument(nameof(type));
 
-            var subPath = CreateSubPathFromType(type);
-            var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
-            var entityName = CreateEntityNameFromInterface(type);
-            var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
-            var fileNameRazor = $"{entityName}EditFieldSetDetail{PageExtension}";
-            var fileNameRazorCode = $"{fileNameRazor}{CodeExtension}";
-            var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetDetailComponentCode)
-            {
-                FullName = CreateEntityFullNameFromInterface(type),
-                FileExtension = PageExtension,
-            };
-            result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
+        //    var subPath = CreateSubPathFromType(type);
+        //    var projectSharedComponentsPath = Path.Combine(ProjectName, SharedFolder, ComponentsFolder, subPath);
+        //    var entityName = CreateEntityNameFromInterface(type);
+        //    var entityFullName = $"{CreateModelsNameSpace(type)}.{entityName}";
+        //    var fileNameRazor = $"{entityName}EditFieldSetDetail{PageExtension}";
+        //    var fileNameRazorCode = $"{fileNameRazor}{CodeExtension}";
+        //    var result = new Models.GeneratedItem(Common.UnitType.BlazorApp, Common.ItemType.FieldSetDetailComponentCode)
+        //    {
+        //        FullName = CreateEntityFullNameFromInterface(type),
+        //        FileExtension = PageExtension,
+        //    };
+        //    result.SubFilePath = Path.Combine(projectSharedComponentsPath, fileNameRazorCode);
 
-            StartCreateEditFieldSetDetailComponentCode(type, result.Source);
-            result.Add("using Microsoft.AspNetCore.Components;");
-            result.Add("using Radzen;");
-            result.Add("using System;");
+        //    StartCreateEditFieldSetDetailComponentCode(type, result.Source);
+        //    result.Add("using Microsoft.AspNetCore.Components;");
+        //    result.Add("using Radzen;");
+        //    result.Add("using System;");
 
-            result.Add($"namespace {CreateComponentsNameSpace(type)}");
-            result.Add("{");
-            result.Add($"partial class {entityName}EditFieldSetDetail");
-            result.Add("{");
+        //    result.Add($"namespace {CreateComponentsNameSpace(type)}");
+        //    result.Add("{");
+        //    result.Add($"partial class {entityName}EditFieldSetDetail");
+        //    result.Add("{");
 
-            result.Add("[Parameter]");
-            result.Add($"public {entityFullName} EditModel" + " { get; set; }");
+        //    result.Add("[Parameter]");
+        //    result.Add($"public {entityFullName} EditModel" + " { get; set; }");
 
-            result.Add("[Parameter]");
-            result.Add("public Func<string, string> LocalTranslate { get; set; }");
+        //    result.Add("[Parameter]");
+        //    result.Add("public Func<string, string> LocalTranslate { get; set; }");
 
-            result.Add("[Parameter]");
-            result.Add("public Func<string, string> LocalTranslateFor { get; set; }");
+        //    result.Add("[Parameter]");
+        //    result.Add("public Func<string, string> LocalTranslateFor { get; set; }");
 
-            result.Add("}");
-            result.Add("}");
+        //    result.Add("}");
+        //    result.Add("}");
 
-            FinishCreateEditFieldSetDetailComponentCode(type, result.Source);
-            result.FormatCSharpCode();
-            return result;
-        }
-        partial void StartCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
-        partial void FinishCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
+        //    FinishCreateEditFieldSetDetailComponentCode(type, result.Source);
+        //    result.FormatCSharpCode();
+        //    return result;
+        //}
+        //partial void StartCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
+        //partial void FinishCreateEditFieldSetDetailComponentCode(Type type, List<string> lines);
 		#endregion FieldSet component generation
 	}
 }

@@ -49,11 +49,11 @@ namespace CSharpCodeGenerator.Logic.Common
         EditFormComponentRazor = 8192 * 8192 * 8,
         EditFormComponentCode = 8192 * 8192 * 16,
 
-        TypeScriptEnum = (long)8192 * 8192 * 16,
-        TypeScriptContract = (long)8192 * 8192 * 32,
+        TypeScriptEnum = (long)8192 * 8192 * 32,
+        TypeScriptContract = (long)8192 * 8192 * 64,
 
-        Translations = (long)8192 * 8192 * 64,
-        Properties = (long)8192 * 8192 * 128,
+        Translations = (long)8192 * 8192 * 128,
+        Properties = (long)8192 * 8192 * 256,
 
         IndexRazorPageAll = IndexRazorPage + IndexRazorPageCode,
         DataGridAll = DataGridHandlerCode 

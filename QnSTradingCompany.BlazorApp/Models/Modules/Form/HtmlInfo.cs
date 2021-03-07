@@ -9,7 +9,7 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Form
         public bool Readonly { get; set; }
         public bool Enabled { get; set; }
         public string CssClass { get; set; } = string.Empty;
-        public string AtrStyle { get; set; } = string.Empty;
+        public string AttrStyle { get; set; } = string.Empty;
         public string Placeholder { get; set; } = string.Empty;
         public string Tooltip { get; set; } = string.Empty;
     }

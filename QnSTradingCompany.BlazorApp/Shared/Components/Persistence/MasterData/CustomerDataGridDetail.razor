@@ -1,4 +1,4 @@
-@*@QnSGeneratedCode*@
+@*@QnSCustomerCode*@
 @inherits DataGridDetailComponent
 @using Radzen;
 @using TModel = QnSTradingCompany.BlazorApp.Models.Persistence.MasterData.Customer;
@@ -6,11 +6,13 @@
 <RadzenCard Style="margin-bottom:20px">
     <b>@TranslateFor("TitleDetails")</b>
 </RadzenCard>
-<RadzenPanel>
-    <HeaderTemplate>
-    </HeaderTemplate>
-    <ChildContent>
-        <DisplayModelComponent ParentComponent=@this Model="@ParentModel" />
-    </ChildContent>
-</RadzenPanel>
-
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="@TranslateFor("Orders")">
+            <QnSTradingCompany.BlazorApp.Shared.Components.Persistence.App.OrderDataGrid DataGridHandler="OrderDataGridHandler" ParentComponent=@this />
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="@TranslateFor("Details")">
+            <DisplayModelComponent ParentComponent=@this Model="@ParentModel" />
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

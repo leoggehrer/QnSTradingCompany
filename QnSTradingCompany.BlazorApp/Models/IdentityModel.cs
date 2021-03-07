@@ -5,28 +5,45 @@ namespace QnSTradingCompany.BlazorApp.Models
 {
     public abstract partial class IdentityModel : ModelObject, Contracts.IIdentifiable
     {
-        private int _id;
-        public virtual int Id
+        private int id;
+        private int saveId;
+        private bool cloneData;
+
+        public virtual int Id 
         {
-            get
-            {
-                OnIdReading();
-                return _id;
-            }
+            get => id;
             set
             {
-                bool handled = false;
-                OnIdChanging(ref handled, ref _id);
-                if (handled == false)
+                if (cloneData)
                 {
-                    this._id = value;
+                    saveId = value;
                 }
-                OnIdChanged();
+                else
+                {
+                    id = value;
+                    saveId = 0;
+                }
             }
         }
-        partial void OnIdReading();
-        partial void OnIdChanging(ref bool handled, ref int _id);
-        partial void OnIdChanged();
+        public bool Cloneable => Id > 0 || saveId > 0;
+        public bool CloneData
+        {
+            get { return cloneData; }
+            set
+            {
+                if (value)
+                {
+                    saveId = id;
+                    id = 0;
+                }
+                else if (saveId > 0)
+                {
+                    id = saveId;
+                    saveId = 0;
+                }
+                cloneData = value;
+            }
+        }
     }
 }
 //MdEnd

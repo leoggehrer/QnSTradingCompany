@@ -1,12 +1,17 @@
 //@QnSCodeCopy
 //MdStart
 
-using QnSTradingCompany.BlazorApp.Models.Modules.Form;
-
 namespace QnSTradingCompany.BlazorApp.Shared.Components
 {
-	public partial class DataGridCommonComponent : DisplayComponent
+    public partial class DataGridCommonComponent : DisplayComponent
     {
+        public DataGridCommonComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
     }
 }
 //MdEnd

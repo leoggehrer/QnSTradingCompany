@@ -13,6 +13,14 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
         public TMember ModelMember { get; set; }
         [Parameter]
         public HtmlInfo HtmlInfo { get; set; }
+
+        public EditControlComponent()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
     }
 }
 //MdEnd
