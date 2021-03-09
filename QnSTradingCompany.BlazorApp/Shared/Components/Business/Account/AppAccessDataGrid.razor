@@ -64,12 +64,13 @@
 @code {
     TModel EditModel => DataGridHandler.EditModel;
     TModel DeleteModel => DataGridHandler.DeleteModel;
+    EditContext EditContext => DataGridHandler.EditContext;
 
     protected override Task FinishedFirstRenderAsync()
     {
         DataGridHandler.ShowNotification = ShowNotification;
-        DataGridHandler.ShowEditItemAsync = ShowEditItemDialogAsync;
-        DataGridHandler.ShowConfirmDeleteAsync = ShowConfirmDeleteDialogAsync;
+        DataGridHandler.ShowEditItemDialogAsync = ShowEditItemDialogAsync;
+        DataGridHandler.ShowConfirmDeleteDialogAsync = ShowConfirmDeleteDialogAsync;
         DialogService.OnClose += DataGridHandler.OnCloseDialog;
 
         return base.FinishedFirstRenderAsync();
@@ -82,34 +83,37 @@
 
     async Task ShowEditItemDialogAsync() => await DialogService.OpenAsync(TranslateFor("TitleEditModel"), ds =>
     @<div class="card" style="padding: 10px;">
-        @if (DataGridSetting.HasEditDialogHeader)
-        {
-            <div class="card-header" style="background-color: transparent; border-bottom-style: none;">
-                <div class="row justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelChangesDialog(ds)">@TranslateFor("Cancel")</button>
-                    <div>
-                        <button type="submit" class="btn btn-outline-info" @onclick="() => DataGridHandler.SubmitChangesAsync(ds)">@TranslateFor("Submit")</button>
-                        <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitChangesCloseAsync(ds)">@TranslateFor("SubmitClose")</button>
-                    </div>
-                </div>
-            </div>
-        }
-        <div class="card-body">
-            <EditModelComponent ParentComponent=@this Model=@EditModel Cloneable="@DataGridHandler.AllowAdd" />
-        </div>
+        <EditForm EditContext="@EditContext">
+            <DataAnnotationsValidator />
 
-        @if (DataGridSetting.HasEditDialogFooter)
-        {
-            <div class="card-footer" style="background-color: transparent; border-top-style: none;">
-                <div class="row justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelChangesDialog(ds)">@TranslateFor("Cancel")</button>
-                    <div>
-                        <button type="submit" class="btn btn-outline-info" @onclick="() => DataGridHandler.SubmitChangesAsync(ds)">@TranslateFor("Submit")</button>
-                        <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitChangesCloseAsync(ds)">@TranslateFor("SubmitClose")</button>
+            @if (DataGridSetting.HasEditDialogHeader)
+            {
+                <div class="card-header" style="background-color: transparent; border-bottom-style: none;">
+                    <div class="row justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelChangesDialog(ds)">@TranslateFor("Cancel")</button>
+                        <div>
+                            <button type="submit" class="btn btn-outline-info" @onclick="() => DataGridHandler.SubmitChangesAsync(ds)">@TranslateFor("Submit")</button>
+                            <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitChangesCloseAsync(ds)">@TranslateFor("SubmitClose")</button>
+                        </div>
                     </div>
                 </div>
+            }
+            <div class="card-body">
+                <EditModelComponent ParentComponent=@this Model=@EditModel Cloneable="@DataGridHandler.AllowAdd" />
             </div>
-        }
+            @if (DataGridSetting.HasEditDialogFooter)
+            {
+                <div class="card-footer" style="background-color: transparent; border-top-style: none;">
+                    <div class="row justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" style="display: inline-block; margin-left: 10px;" @onclick="() => DataGridHandler.CancelChangesDialog(ds)">@TranslateFor("Cancel")</button>
+                        <div>
+                            <button type="submit" class="btn btn-outline-info" @onclick="() => DataGridHandler.SubmitChangesAsync(ds)">@TranslateFor("Submit")</button>
+                            <button type="submit" class="btn btn-outline-primary" @onclick="() => DataGridHandler.SubmitChangesCloseAsync(ds)">@TranslateFor("SubmitClose")</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </EditForm>
     </div>
     , EditOptions);
 

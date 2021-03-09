@@ -60,7 +60,7 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         {
             if (e.ContainsKey($"{typeof(TModel).Name}{ItemRefIdName}") == false)
             {
-                e.Add(new DisplayProperty(typeof(TModel).Name, ItemRefIdName) 
+                e.Add(new DisplayProperty(typeof(TModel).Name, ItemRefIdName)
                 {
                     Order = 1,
                     ListVisible = false,
