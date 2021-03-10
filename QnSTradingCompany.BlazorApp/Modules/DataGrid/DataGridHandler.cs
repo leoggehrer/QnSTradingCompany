@@ -616,19 +616,17 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             {
                 try
                 {
+                    var entity = default(TContract);
+
                     if (item.Id > 0)
                     {
-                        var entity = await AdapterAccess.GetByIdAsync(item.Id).ConfigureAwait(false);
-
-                        EditModel = new TModel();
-                        EditModel.CopyProperties(entity);
+                        entity = await AdapterAccess.GetByIdAsync(item.Id).ConfigureAwait(false);
                     }
                     else
                     {
-                        EditModel = await CreateModelAsync().ConfigureAwait(false);
-                        EditModel.CopyProperties(item);
+                        entity = await CreateModelAsync().ConfigureAwait(false);
                     }
-                    await ShowEditModelAsync(EditModel).ConfigureAwait(false);
+                    await ShowEditModelAsync(entity).ConfigureAwait(false);
                 }
                 catch (System.Exception ex)
                 {
@@ -641,16 +639,28 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         partial void AfterRowDoubleClick(TModel item);
 
         #region Dialog operations
+        public bool IsEditModal { get; private set; }
+        public bool InSubmitChanges { get; private set; }
+        protected virtual async Task ShowEditModelAsync(TContract entity)
+        {
+            entity.CheckArgument(nameof(entity));
+
+            EditModel = new TModel();
+
+            EditModel.CopyProperties(entity);
+            await ShowEditModelAsync(EditModel).ConfigureAwait(false);
+        }
         protected virtual async Task ShowEditModelAsync(TModel editModel)
         {
             editModel.CheckArgument(nameof(editModel));
 
-            BeforeEditModelHandler?.Invoke(this, EditModel);
-            LoadModelDataHandler?.Invoke(this, new[] { EditModel });
+            BeforeEditModelHandler?.Invoke(this, editModel);
+            LoadModelDataHandler?.Invoke(this, new[] { editModel });
             if (ShowEditItemDialogAsync != null)
             {
-                BeforeShowEditItem(EditModel);
-                EditContext = new EditContext(EditModel);
+                BeforeShowEditItem(editModel);
+                IsEditModal = true;
+                EditContext = new EditContext(editModel);
                 await ShowEditItemDialogAsync().ConfigureAwait(false);
             }
         }
@@ -660,9 +670,7 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             {
                 var entity = await AdapterAccess.GetByIdAsync(id).ConfigureAwait(false);
 
-                EditModel = new TModel();
-                EditModel.CopyProperties(entity);
-                await ShowEditModelAsync(EditModel).ConfigureAwait(false);
+                await ShowEditModelAsync(entity).ConfigureAwait(false);
             }
             catch (System.Exception ex)
             {
@@ -696,46 +704,56 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
 
         public virtual async Task SubmitChangesAsync(DialogService dialogService)
         {
-            var handled = false;
-
-            BeforeSubmitChanges(EditModel, ref handled);
-            if (handled == false)
+            if (InSubmitChanges == false)
             {
-                try
-                {
-                    var entity = await CreateModelAsync().ConfigureAwait(false);
+                var result = false;
+                var handled = false;
 
-                    if (EditModel.CloneData || EditModel.Id == 0)
+                InSubmitChanges = true;
+                BeforeSubmitChanges(EditModel, ref handled);
+                if (handled == false)
+                {
+                    try
                     {
-                        entity.CopyFrom(EditModel, p => p.Equals(nameof(EditModel.Id)) == false);
-                        await InsertModelAsync(entity).ConfigureAwait(false);
+                        var entity = default(TModel);
+
+                        if (EditModel.CloneData || EditModel.Id == 0)
+                        {
+                            entity = await CreateModelAsync().ConfigureAwait(false);
+                            entity.CopyFrom(EditModel, p => p.Equals(nameof(EditModel.Id)) == false);
+                            result = await InsertModelAsync(entity).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            entity = new TModel();
+                            entity.CopyFrom(EditModel);
+                            result = await UpdateModelAsync(entity).ConfigureAwait(false);
+                        }
+                        if (result)
+                        {
+                            dialogService.Close();
+                            EditModel = new TModel();
+                            EditModel.CopyFrom(entity);
+                            AfterSubmitChanges(EditModel);
+                            InSubmitChanges = false;
+                            await ShowEditModelAsync(EditModel).ConfigureAwait(false);
+                        }
                     }
-                    else
+                    catch (System.Exception ex)
                     {
-                        entity.CopyFrom(EditModel);
-                        await UpdateModelAsync(entity).ConfigureAwait(false);
+                        ShowException(EditModel?.Id == 0 ? "Error create" : "Error update", ex);
                     }
-                    EditModel.CopyFrom(entity);
-                    if (EditContext != null)
+                    finally
                     {
-                        //EditContext = new EditContext(EditModel);
-                        //if (EditModel is Models.Persistence.App.Order order)
-                        //{
-                        //    ((Models.Persistence.App.Order)EditContext.Model).PriceNet = order.PriceNet;
-                        //    ((Models.Persistence.App.Order)EditContext.Model).Discount = order.Discount;
-                        //}
-                        //else
-                        //{
-                        await InvokePageAsync(() => EditContext.Model.CopyFrom(EditModel)).ConfigureAwait(false);
-                        //}
+                        InSubmitChanges = false;
                     }
                 }
-                catch (System.Exception ex)
+                else
                 {
-                    ShowException(EditModel?.Id == 0 ? "Error create" : "Error update", ex);
+                    AfterSubmitChanges(EditModel);
+                    InSubmitChanges = false;
                 }
             }
-            AfterSubmitChanges(EditModel);
         }
         public virtual async Task SubmitChangesCloseAsync(DialogService dialogService)
         {
@@ -747,16 +765,18 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             {
                 try
                 {
-                    if (ValidateModel(EditModel))
+                    var result = false;
+
+                    if (EditModel.Id == 0)
                     {
-                        if (EditModel.Id == 0)
-                        {
-                            await InsertModelAsync(EditModel).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await UpdateModelAsync(EditModel).ConfigureAwait(false);
-                        }
+                        result = await InsertModelAsync(EditModel).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        result = await UpdateModelAsync(EditModel).ConfigureAwait(false);
+                    }
+                    if (result)
+                    {
                         dialogService.Close();
                     }
                 }
@@ -822,15 +842,14 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             DeleteModel = null;
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
         public void OnCloseDialog(dynamic result)
-#pragma warning restore IDE0060 // Remove unused parameter
         {
             EditModel?.CancelEdit();
             EditModel = null;
             DeleteModel?.CancelDelete();
             DeleteModel = null;
             EditContext = null;
+            IsEditModal = InSubmitChanges;
         }
         #endregion Dialog operations
 
@@ -844,24 +863,26 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             AfterCreateModelHandler?.Invoke(this, result);
             return result;
         }
-        public virtual async Task InsertModelAsync(TModel model)
+        public virtual async Task<bool> InsertModelAsync(TModel model)
         {
             var handled = false;
+            var result = ValidateModel(model);
 
-            BeforeInsertModel(model, ref handled);
-            if (handled == false)
+            if (result)
             {
-                BeforeInsertModelHandler?.Invoke(this, model);
-                if (ValidateModel(model))
+                BeforeInsertModel(model, ref handled);
+                if (handled == false)
                 {
+                    BeforeInsertModelHandler?.Invoke(this, model);
                     var curItem = await AdapterAccess.InsertAsync(model).ConfigureAwait(false);
 
                     model.CopyProperties(curItem);
                 }
+                AfterInsertModelHandler?.Invoke(this, model);
+                AfterInsertModel(model);
+                await AfterModelActionAsync(model, inserted: true).ConfigureAwait(false);
             }
-            AfterInsertModelHandler?.Invoke(this, model);
-            AfterInsertModel(model);
-            await AfterModelActionAsync(model, inserted: true).ConfigureAwait(false);
+            return result;
         }
         protected virtual void BeforeInsertModel(TModel model, ref bool handled)
         {
@@ -870,25 +891,27 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
         {
         }
 
-        public virtual async Task UpdateModelAsync(TModel model)
+        public virtual async Task<bool> UpdateModelAsync(TModel model)
         {
             var handled = false;
+            var result = ValidateModel(model);
 
-            BeforeUpdateModel(model, ref handled);
-            if (handled == false)
+            if (result)
             {
-                BeforeUpdateModelHandler?.Invoke(this, model);
-                if (ValidateModel(model))
+                BeforeUpdateModel(model, ref handled);
+                if (handled == false)
                 {
+                    BeforeUpdateModelHandler?.Invoke(this, model);
                     var curItem = await AdapterAccess.UpdateAsync(model).ConfigureAwait(false);
 
                     model.CopyProperties(curItem);
                     LoadModelDataHandler?.Invoke(this, new[] { model });
                 }
+                AfterUpdateModelHandler?.Invoke(this, model);
+                AfterUpdateModel(model);
+                await AfterModelActionAsync(model, updated: true).ConfigureAwait(false);
             }
-            AfterUpdateModelHandler?.Invoke(this, model);
-            AfterUpdateModel(model);
-            await AfterModelActionAsync(model, updated: true).ConfigureAwait(false);
+            return result;
         }
         protected virtual void BeforeUpdateModel(TModel model, ref bool handled)
         {
@@ -941,7 +964,7 @@ namespace QnSTradingCompany.BlazorApp.Modules.DataGrid
             BeforeEditRow(item, ref handled);
             if (handled == false && AllowEdit && EditModel == null)
             {
-                EditModel = await CreateModelAsync().ConfigureAwait(false);
+                EditModel = new TModel();
                 EditModel.CopyProperties(item);
 
                 if (AllowInlineEdit)

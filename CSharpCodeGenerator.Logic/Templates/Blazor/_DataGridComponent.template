@@ -1,22 +1,26 @@
 @*@QnSCodeCopy*@
 
 @*DefaultPage*@
+<style>
+    .no-scroll {
+        overflow: auto !important;
+        padding-right: 0px !important;
+    }
+    .progress {
+        text-align: center;
+    }
+    .progress-value {
+        color: #343a40;
+        font-size: 0.75rem;
+        margin-top: 8px;
+        position: absolute;
+        right: 0;
+        left: 0;
+    }
+</style>
 
 @if (DataGridSetting.HasDataGridProgress)
 {
-    <style>
-        .progress {
-            text-align: center;
-        }
-        .progress-value {
-            color: #343a40;
-            font-size: 0.75rem;
-            margin-top: 8px;
-            position: absolute;
-            right: 0;
-            left: 0;
-        }
-    </style>
     int progressTo = 0;
 
     if (DataGridHandler.Count > 0)
@@ -133,7 +137,6 @@
         <div class="card-body">
             <DisplayModelComponent ParentComponent=@this Model="@DeleteModel" />
         </div>
-
         @if (DataGridSetting.HasDeleteDialogFooter)
         {
             <div class="card-footer" style="background-color: transparent; border-top-style: none;">

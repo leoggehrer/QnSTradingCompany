@@ -3,7 +3,7 @@
 
 namespace QnSTradingCompany.BlazorApp.Models.Modules.Configuration
 {
-    public class MenuItemModel : ModelObject
+    public partial class EditFormSetting : ConfigurationModel
     {
         public string Text { get; set; }
         public string Value { get; set; }

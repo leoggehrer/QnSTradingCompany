@@ -17,21 +17,28 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.Configuration
 
             SubObjects.Clear();
 
-            if (Value != null && Value.Contains("\"Type\":\"MenuItem\""))
+            try
             {
-                SubObjects.Add(JsonSerializer.Deserialize<MenuItemModel>(Value));
+                if (Value != null && Value.Contains($"\"Type\":\"{nameof(MenuItem)}\""))
+                {
+                    SubObjects.Add(JsonSerializer.Deserialize<MenuItem>(Value));
+                }
+                else if (Value != null && Value.Contains($"\"Type\":\"{nameof(DialogOptions)}\""))
+                {
+                    SubObjects.Add(JsonSerializer.Deserialize<DialogOptions>(Value));
+                }
+                else if (Value != null && Value.Contains($"\"Type\":\"{nameof(DataGridSetting)}\""))
+                {
+                    SubObjects.Add(JsonSerializer.Deserialize<DataGridSetting>(Value));
+                }
+                else if (Value != null && Value.Contains($"\"Type\":\"{nameof(DisplaySetting)}\""))
+                {
+                    SubObjects.Add(JsonSerializer.Deserialize<DisplaySetting>(Value));
+                }
             }
-            else if (Value != null && Value.Contains("\"Type\":\"DialogOptions\""))
+            catch (System.Exception ex)
             {
-                SubObjects.Add(JsonSerializer.Deserialize<DialogOptionsModel>(Value));
-            }
-            else if (Value != null && Value.Contains("\"Type\":\"DataGridSetting\""))
-            {
-                SubObjects.Add(JsonSerializer.Deserialize<DataGridSettingModel>(Value));
-            }
-            else if (Value != null && Value.Contains("\"Type\":\"DisplaySetting\""))
-            {
-                SubObjects.Add(JsonSerializer.Deserialize<DisplaySettingModel>(Value));
+                System.Diagnostics.Debug.WriteLine($"Error in {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
         }
         public override void BeforeSave()
@@ -42,21 +49,21 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.Configuration
             {
                 var serializerOptions = new JsonSerializerOptions { IgnoreReadOnlyProperties = true };
 
-                if (SubObjects[0] is MenuItemModel mim)
+                if (SubObjects[0] is MenuItem mim)
                 {
-                    Value = JsonSerializer.Serialize(mim, serializerOptions).Replace("{", "{\"Type\":\"MenuItem\",");
+                    Value = JsonSerializer.Serialize(mim, serializerOptions);
                 }
-                else if (SubObjects[0] is DialogOptionsModel dom)
+                else if (SubObjects[0] is DialogOptions dom)
                 {
-                    Value = JsonSerializer.Serialize(dom, serializerOptions).Replace("{", "{\"Type\":\"DialogOptions\",");
+                    Value = JsonSerializer.Serialize(dom, serializerOptions);
                 }
-                else if (SubObjects[0] is DataGridSettingModel dgm)
+                else if (SubObjects[0] is DataGridSetting dgm)
                 {
-                    Value = JsonSerializer.Serialize(dgm, serializerOptions).Replace("{", "{\"Type\":\"DataGridSetting\",");
+                    Value = JsonSerializer.Serialize(dgm, serializerOptions);
                 }
-                else if (SubObjects[0] is DisplaySettingModel dsm)
+                else if (SubObjects[0] is DisplaySetting dsm)
                 {
-                    Value = JsonSerializer.Serialize(dsm, serializerOptions).Replace("{", "{\"Type\":\"DisplaySetting\",");
+                    Value = JsonSerializer.Serialize(dsm, serializerOptions);
                 }
             }
         }
@@ -65,6 +72,17 @@ namespace QnSTradingCompany.BlazorApp.Models.Persistence.Configuration
             base.EvaluateDisplayProperty(displayProperty);
 
             if (displayProperty.OriginName.Equals(nameof(Value)))
+            {
+                if (SubObjects.Count == 1)
+                {
+                    displayProperty.EditVisible = false;
+                }
+                else
+                {
+                    displayProperty.EditVisible = true;
+                }
+            }
+            else if (displayProperty.OriginName.Equals(nameof(ConfigurationModel.Type)))
             {
                 if (SubObjects.Count == 1)
                 {

@@ -150,7 +150,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             type.CheckArgument(nameof(type));
 
-            List<string> result = new List<string>();
+            var result = new List<string>();
             var entityName = CreateEntityNameFromInterface(type);
             var properties = ContractHelper.GetAllProperties(type);
 

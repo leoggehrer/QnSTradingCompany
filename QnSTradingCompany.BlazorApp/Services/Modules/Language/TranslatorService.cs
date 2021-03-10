@@ -13,8 +13,8 @@ namespace QnSTradingCompany.BlazorApp.Services.Modules.Language
 {
     public sealed partial class TranslatorService : ITranslatorService
     {
-        private readonly Dictionary<string, TranslationEntry> storedEntries = new Dictionary<string, TranslationEntry>();
-        private readonly Dictionary<string, TranslationEntry> unstoredEntries = new Dictionary<string, TranslationEntry>();
+        private readonly Dictionary<string, TranslationEntry> storedEntries = new();
+        private readonly Dictionary<string, TranslationEntry> unstoredEntries = new();
 
         public LanguageCode KeyLanguage { get; } = LanguageCode.En;
         public LanguageCode ValueLanguage { get; } = LanguageCode.De;

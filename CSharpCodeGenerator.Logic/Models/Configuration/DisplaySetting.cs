@@ -1,10 +1,13 @@
 //@QnSCodeCopy
 //MdStart
 
-namespace QnSTradingCompany.BlazorApp.Models.Modules.Configuration
+namespace CSharpCodeGenerator.Logic.Models.Configuration
 {
-    public class DisplaySettingModel : ModelObject
+    internal record DisplaySetting
     {
+#pragma warning disable CA1822 // Mark members as static
+        public string Type => nameof(DisplaySetting);
+#pragma warning restore CA1822 // Mark members as static
         public bool ScaffoldItem { get; set; }
         public bool IsModelItem { get; set; }
         public bool Readonly { get; set; }
@@ -19,3 +22,4 @@ namespace QnSTradingCompany.BlazorApp.Models.Modules.Configuration
         public int Order { get; set; }
     }
 }
+//MdEnd

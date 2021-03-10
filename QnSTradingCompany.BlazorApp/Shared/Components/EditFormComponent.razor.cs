@@ -28,6 +28,9 @@ namespace QnSTradingCompany.BlazorApp.Shared.Components
             }
         }
         public bool HasHeader { get; set; }
+        public bool HasSubmit { get; set; } = true;
+        public bool HasSubmitClose { get; set; } = true;
+        public bool HasCancel { get; set; } = true;
         public bool HasFooter { get; set; } = true;
 
         public EditFormComponent()

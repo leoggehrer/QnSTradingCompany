@@ -2,6 +2,7 @@
 //MdStart
 using CommonBase.Extensions;
 using CSharpCodeGenerator.Logic.Contracts;
+using CSharpCodeGenerator.Logic.Models.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,44 +87,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Source.AddRange(translations.Distinct());
             return result;
         }
-        #region Record definitions
-        private record MenuItem(string Type,
-                                string Text,
-                                string Value,
-                                string Path,
-                                string Icon,
-                                int Order);
 
-        private record DialogOptions(string Type,
-                                     bool ShowTitle,
-                                     bool ShowClose,
-                                     string Left,
-                                     string Top,
-                                     string Bottom,
-                                     string Width,
-                                     string Height);
-
-        private record DataGridSetting(string Type,
-                                       bool HasDataGridProgress,
-                                       bool HasEditDialogHeader,
-                                       bool HasEditDialogFooter,
-                                       bool HasDeleteDialogHeader,
-                                       bool HasDeleteDialogFooter);
-
-        private record DisplaySetting(string Type,
-                                      bool ScaffoldItem, 
-                                      bool IsModelItem, 
-                                      bool Readonly, 
-                                      string FormatValue, 
-                                      bool Visible, 
-                                      bool DisplayVisible, 
-                                      bool EditVisible, 
-                                      bool ListVisible, 
-                                      bool ListSortable, 
-                                      bool ListFilterable, 
-                                      string ListWidth, 
-                                      int Order);
-        #endregion Record definitions
         private Models.GeneratedItem CreateProperties(string separator)
         {
             var properties = new List<string>();
@@ -133,12 +97,14 @@ namespace CSharpCodeGenerator.Logic.Generation
                 FullName = $"Properties",
                 FileExtension = ".csv",
             };
-            var menuItem = new MenuItem(Type: nameof(MenuItem),
-                                        Text: "Home",
-                                        Value: "home",
-                                        Path: "/",
-                                        Icon: "home",
-                                        Order: 1);
+            var menuItem = new MenuItem()
+            {
+                Text = "Home",
+                Value = "home",
+                Path = "/",
+                Icon = "home",
+                Order = 1,
+            };
             var types = contractsProject.PersistenceTypes
                                         .Union(contractsProject.BusinessTypes)
                                         .Union(contractsProject.ModuleTypes)
@@ -166,20 +132,24 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (result.Any(e => e.StartsWith(categoryKey)) == false)
                 {
-                    var dialogOptions = new DialogOptions(Type: nameof(DialogOptions),
-                                                          ShowTitle: true,
-                                                          ShowClose: true,
-                                                          Left: string.Empty,
-                                                          Top: string.Empty,
-                                                          Bottom: string.Empty,
-                                                          Width: "800px",
-                                                          Height: string.Empty);
-                    var dataGridItem = new DataGridSetting(Type: nameof(DataGridSetting), 
-                                                           HasDataGridProgress: true,
-                                                           HasEditDialogHeader: false,
-                                                           HasEditDialogFooter: true,
-                                                           HasDeleteDialogHeader: false,
-                                                           HasDeleteDialogFooter: true);
+                    var dialogOptions = new DialogOptions()
+                    {
+                        ShowTitle = true,
+                        ShowClose = true,
+                        Left = string.Empty,
+                        Top = string.Empty,
+                        Bottom = string.Empty,
+                        Width = "800px",
+                        Height = string.Empty,
+                    };
+                    var dataGridItem = new DataGridSetting()
+                    {
+                        HasDataGridProgress = true,
+                        HasEditDialogHeader = false,
+                        HasEditDialogFooter = true,
+                        HasDeleteDialogHeader = false,
+                        HasDeleteDialogFooter = true,
+                    };
 
                     result.Add($"{categoryKey}{separator}PageSize{separator}{separator}50");
                     result.Add($"{categoryKey}DataGrid{separator}Setting{separator}{separator}{JsonSerializer.Serialize<DataGridSetting>(dataGridItem)}");
@@ -193,19 +163,21 @@ namespace CSharpCodeGenerator.Logic.Generation
                     if (result.Any(e => e.StartsWith(fullKey)) == false)
                     {
                         var propertyHelper = new Helpers.ContractPropertyHelper(pi);
-                        var displaySetting = new DisplaySetting(Type: nameof(DisplaySetting), 
-                                                                ScaffoldItem: true,
-                                                                IsModelItem: false,
-                                                                Readonly: false,
-                                                                FormatValue: string.Empty,
-                                                                Visible: GetVisible(propertyHelper),
-                                                                DisplayVisible: true,
-                                                                EditVisible: true,
-                                                                ListVisible: true,
-                                                                ListSortable: true,
-                                                                ListFilterable: true,
-                                                                ListWidth: GetListWitdh(propertyHelper),
-                                                                Order: 10_000);
+                        var displaySetting = new DisplaySetting()
+                        {
+                            ScaffoldItem = true,
+                            IsModelItem = false,
+                            Readonly = false,
+                            FormatValue = string.Empty,
+                            Visible = GetVisible(propertyHelper),
+                            DisplayVisible = true,
+                            EditVisible = true,
+                            ListVisible = true,
+                            ListSortable = true,
+                            ListFilterable = true,
+                            ListWidth = GetListWitdh(propertyHelper),
+                            Order = 10_000,
+                        };
 
                         result.Add($"{fullKey}{separator}{JsonSerializer.Serialize<DisplaySetting>(displaySetting)}");
                     }

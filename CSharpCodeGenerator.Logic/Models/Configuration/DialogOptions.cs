@@ -1,10 +1,13 @@
 //@QnSCodeCopy
 //MdStart
 
-namespace QnSTradingCompany.BlazorApp.Models.Modules.Configuration
+namespace CSharpCodeGenerator.Logic.Models.Configuration
 {
-    public class DialogOptionsModel : ModelObject
+    internal record DialogOptions
     {
+#pragma warning disable CA1822 // Mark members as static
+        public string Type => nameof(DialogOptions);
+#pragma warning restore CA1822 // Mark members as static
         public bool ShowTitle { get; set; }
         public bool ShowClose { get; set; }
         public string Left { get; set; }
